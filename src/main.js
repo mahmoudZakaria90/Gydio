@@ -1,12 +1,13 @@
 import Vue from 'vue'
 import App from './App.vue'
 import firebase from "firebase/app";
+import "firebase/storage";
 import { library } from '@fortawesome/fontawesome-svg-core';
-import { faUserSecret } from '@fortawesome/free-solid-svg-icons';
+import { faPlusCircle, faCheckCircle, faArrowCircleUp } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
-import "./assets/general.sass"
+import "./assets/sass/general.sass"
 
-library.add(faUserSecret)
+library.add(faPlusCircle, faCheckCircle, faArrowCircleUp)
 
 Vue.component('font-awesome-icon', FontAwesomeIcon)
 

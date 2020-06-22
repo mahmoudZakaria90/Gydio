@@ -27,7 +27,7 @@ export default {
 </script>
 
 <style lang="sass">
-@import './assets/placeholders'
+@import './assets/sass/placeholders'
 
 button
   @extend %button
