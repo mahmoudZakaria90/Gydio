@@ -31,4 +31,8 @@ export default {
 
 button
   @extend %button
+
+.intro
+  padding-top: 30px
+  margin-bottom: 50px
 </style>

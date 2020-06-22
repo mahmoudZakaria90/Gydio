@@ -9,10 +9,10 @@
           </span>
           <span>{{fileName}}</span>
         </label>
-        <input id="file_uploader" type="file" hidden />
+        <input id="file_uploader" @change="handleFileName" type="file" hidden />
       </div>
       <div class="uploader-btn-wrap">
-        <button class="uploader-btn">Upload!</button>
+        <button :disabled="isDisabled" class="uploader-btn">Upload!</button>
         <div class="progress">{{progress}}%</div>
       </div>
     </div>
@@ -24,8 +24,19 @@ export default {
   data() {
     return {
       progress: 0,
-      fileName: "Cities XL.mp3"
+      fileName: "No file has been chosen.",
+      isDisabled: true
     };
+  },
+  methods: {
+    handleFileName({ target }) {
+      const file = target.files[0];
+      const { name } = file;
+      this.fileName = name;
+      if (name) {
+        this.isDisabled = false;
+      }
+    }
   }
 };
 </script>
