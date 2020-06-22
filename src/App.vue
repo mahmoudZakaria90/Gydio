@@ -1,28 +1,34 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+    <header>
+      <nav>
+        <a href>Explore</a>
+      </nav>
+    </header>
+    <div class="container">
+      <div class="intro">
+        <h1>Aydio</h1>
+        <p>Your favorite place for Music, themes and soundtracks of Gaming.</p>
+      </div>
+      <Uploader />
+    </div>
   </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import Uploader from "./components/Uploader";
 
 export default {
-  name: 'App',
+  name: "App",
   components: {
-    HelloWorld
+    Uploader
   }
-}
+};
 </script>
 
-<style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
+<style lang="sass">
+@import './assets/placeholders'
+
+button
+  @extend %button
 </style>
