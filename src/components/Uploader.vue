@@ -1,40 +1,43 @@
 <template>
-  <div>
-    <div class="uploader">
-      <div class="uploader-inner">
-        <p>Upload your fav track.</p>
-        <div class="uploader-placeholder">
-          <div class="uploader-placeholder-inner">
-            <label for="file_uploader" class="uploader-placeholder-btn">
-              Choose file
-              <font-awesome-icon :icon="['fas', 'plus-circle']" />
-            </label>
-            <span>{{fileName}}</span>
-          </div>
-          <div v-if="isProgress" class="progress-outer">
-            <div class="progress">
-              <span>{{progress}}%</span>
-              <span class="progress-inner" :style="{width: progress + '%'}"></span>
-            </div>
-            <p v-html="(bytesTransferred / 1000000) + '/' + (totalBytes / 1000000) + ' MB'"></p>
-          </div>
-        </div>
+  <div class="uploader">
+      <h2 class="uploader-title">Upload your fav track.</h2>
+      <div class="uploader-placeholder">
+        <label for="file_uploader" class="uploader-placeholder-btn">
+          Choose file
+          <font-awesome-icon :icon="['fas', 'plus-circle']" />
+        </label>
+        <span>{{fileName}}</span>
         <input id="file_uploader" @change="handleFileName" type="file" hidden />
+        <p>Or</p>
       </div>
-      <div class="uploader-btn-wrap">
-        <button :disabled="isDisabled" class="uploader-btn" @click="upload">
-          Upload
-          <font-awesome-icon :icon="['fas', 'arrow-circle-up']" />
-        </button>
-        <p>
-          {{progressState}}
-          <font-awesome-icon
-            :icon="['fas', 'check-circle']"
-            :style="{ color: 'lightgreen' }"
-            v-if="isSuccess"
-          />
-        </p>
+      <div class="external-link">
+        <div class="external-link-inner">
+            <label for="">Paste an external link e.g. youtube</label>
+            <input type="text">
+        </div>
       </div>
+        <div v-if="isProgress" class="progress-outer">
+           <p>
+            {{progressState}}
+            <font-awesome-icon
+              :icon="['fas', 'check-circle']"
+              :style="{ color: 'lightgreen' }"
+              v-if="isSuccess"
+            />
+          </p>
+          <div class="progress">
+            <span>{{progress}}%</span>
+            <span class="progress-inner" :style="{width: progress + '%'}"></span>
+          </div>
+          <p v-html="(bytesTransferred / 1000000) + '/' + (totalBytes / 1000000) + ' MB'"></p>
+        </div>
+      
+  
+    <div class="uploader-btn-wrap">
+      <button :disabled="isDisabled" class="uploader-btn" @click="upload">
+        Upload
+        <font-awesome-icon :icon="['fas', 'arrow-circle-up']" />
+      </button>
     </div>
   </div>
 </template>
@@ -107,27 +110,44 @@ export default {
 @import '../assets/sass/placeholders'
 
 .uploader
-    &-inner
-        p
-            margin-bottom: 20px
+    &-title
+      margin-bottom: 10px
     &-placeholder
-        display: flex
-        margin-bottom: 30px
+        position: relative
+        text-align: center
+        & > p
+          margin: 20px 0
+          font-size: 18px
+          font-weight: 600
+          text-align: center
         &-btn
             @extend %button
     &-btn
         &-wrap
             text-align: center
 
+.external
+  &-link
+    text-align: center
+    margin-bottom: 30px
+    label
+      display: block
+      margin-bottom: 10px
+    input
+      width: 300px
+    &-inner
+      text-align: left
+      display: inline-block
+
 .progress
     position: relative
     line-height: 30px
     border: 1px solid #ddd
     margin-bottom: 10px
+    text-align: center
     &-outer
-        text-align: center
-        flex-basis: 300px
-        margin-left: auto
+        width: 75%;
+        margin: 0 auto 30px
     &-inner
         position: absolute
         top: 0
