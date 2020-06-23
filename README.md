@@ -1,4 +1,4 @@
-# aydio
+# Gydio
 
 ## Project setup
 ```
