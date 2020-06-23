@@ -2,18 +2,18 @@
   <div class="uploader">
       <h2 class="uploader-title">Upload your fav track.</h2>
       <div class="uploader-placeholder">
+        <input id="file_uploader" @change="handleFile" type="file" :disabled="Boolean(externalLink)" hidden />
         <label for="file_uploader" class="uploader-placeholder-btn">
           Choose file
           <font-awesome-icon :icon="['fas', 'plus-circle']" />
         </label>
         <span>{{fileName}}</span>
-        <input id="file_uploader" @change="handleFileName" type="file" hidden />
         <p>Or</p>
       </div>
       <div class="external-link">
         <div class="external-link-inner">
             <label for="">Paste an external link e.g. youtube</label>
-            <input type="text">
+            <input type="text" v-model="externalLink" :disabled="blob">
         </div>
       </div>
         <div v-if="isProgress" class="progress-outer">
@@ -34,7 +34,7 @@
       
   
     <div class="uploader-btn-wrap">
-      <button :disabled="isDisabled" class="uploader-btn" @click="upload">
+      <button :disabled="!blob && !externalLink" class="uploader-btn" v-on="{click : blob ? upload_storage : upload_database}">
         Upload
         <font-awesome-icon :icon="['fas', 'arrow-circle-up']" />
       </button>
@@ -48,18 +48,18 @@ export default {
   data() {
     return {
       blob: null,
+      externalLink: '',
       progress: 0,
       bytesTransferred: 0,
       totalBytes: 0,
       progressState: "",
       fileName: "No file has been chosen.",
-      isDisabled: true,
       isProgress: false,
       isSuccess: false
     };
   },
   methods: {
-    handleFileName({ target }) {
+    handleFile({ target }) {
       let file;
       if (target.files.length) {
         file = target.files[0];
@@ -69,11 +69,8 @@ export default {
       const { name } = file;
       this.blob = file;
       this.fileName = name;
-      if (name) {
-        this.isDisabled = false;
-      }
     },
-    upload() {
+    upload_storage() {
       const { name } = this.blob;
       const storageRef = firebase.storage().ref("music/" + name);
       const task = storageRef.put(this.blob);
@@ -98,9 +95,11 @@ export default {
           //reset
           this.blob = null;
           this.fileName = "";
-          this.isDisabled = true;
         }
       );
+    },
+    upload_database(){
+      alert('Database!');
     }
   }
 };
@@ -155,4 +154,8 @@ export default {
         bottom: 0
         background-color: $green
         z-index: -1
+#file_uploader
+  &:disabled + label
+    background-color: $disabled
+    cursor: not-allowed
 </style>

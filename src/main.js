@@ -5,7 +5,7 @@ import "firebase/storage";
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { faPlusCircle, faCheckCircle, faArrowCircleUp } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
-import "./assets/sass/general.sass"
+import "./assets/sass/index.sass"
 
 library.add(faPlusCircle, faCheckCircle, faArrowCircleUp)
 
