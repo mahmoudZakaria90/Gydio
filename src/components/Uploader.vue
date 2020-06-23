@@ -1,54 +1,64 @@
 <template>
   <div class="uploader">
-      <h2 class="uploader-title">Upload your fav track.</h2>
-      <div class="uploader-placeholder">
-        <input id="file_uploader" @change="handleFile" type="file" :disabled="Boolean(externalLink)" hidden />
-        <label for="file_uploader" class="uploader-placeholder-btn">
-          Choose file
-          <font-awesome-icon :icon="['fas', 'plus-circle']" />
-        </label>
-        <span>{{fileName}}</span>
-        <p>Or</p>
+    <h2 class="uploader-title">Upload your fav track.</h2>
+    <div class="uploader-placeholder">
+      <input
+        id="file_uploader"
+        @change="handleFile"
+        type="file"
+        :disabled="Boolean(externalLink)"
+        hidden
+      />
+      <label for="file_uploader" class="uploader-placeholder-btn">
+        Choose file
+        <font-awesome-icon :icon="['fas', 'plus-circle']" />
+      </label>
+      <span>{{fileName}}</span>
+      <p>Or</p>
+    </div>
+    <div class="external-link">
+      <div class="external-link-inner">
+        <label for>Copy/paste an external link e.g. youtube</label>
+        <input type="text" v-model="externalLink" :disabled="blob" />
       </div>
-      <div class="external-link">
-        <div class="external-link-inner">
-            <label for="">Paste an external link e.g. youtube</label>
-            <input type="text" v-model="externalLink" :disabled="blob">
-        </div>
+    </div>
+    <div v-if="isProgress" class="progress-outer">
+      <Success :progressState="progressState" :isSuccess="isSuccess" />
+      <div class="progress">
+        <span>{{progress}}%</span>
+        <span class="progress-inner" :style="{width: progress + '%'}"></span>
       </div>
-        <div v-if="isProgress" class="progress-outer">
-           <p>
-            {{progressState}}
-            <font-awesome-icon
-              :icon="['fas', 'check-circle']"
-              :style="{ color: 'lightgreen' }"
-              v-if="isSuccess"
-            />
-          </p>
-          <div class="progress">
-            <span>{{progress}}%</span>
-            <span class="progress-inner" :style="{width: progress + '%'}"></span>
-          </div>
-          <p v-html="(bytesTransferred / 1000000) + '/' + (totalBytes / 1000000) + ' MB'"></p>
-        </div>
-      
-  
+      <p v-html="(bytesTransferred / 1000000) + '/' + (totalBytes / 1000000) + ' MB'"></p>
+    </div>
+
     <div class="uploader-btn-wrap">
-      <button :disabled="!blob && !externalLink" class="uploader-btn" v-on="{click : blob ? upload_storage : upload_database}">
+      <button
+        :disabled="!blob && !externalLink"
+        class="uploader-btn"
+        v-on="{click : blob ? upload_storage : upload_database}"
+      >
         Upload
         <font-awesome-icon :icon="['fas', 'arrow-circle-up']" />
       </button>
+      
     </div>
   </div>
 </template>
 
 <script>
 import firebase from "firebase/app";
+import "firebase/database";
+
+import Success from "./Success";
+
 export default {
+  components: {
+    Success
+  },
   data() {
     return {
       blob: null,
-      externalLink: '',
+      externalLink: "",
       progress: 0,
       bytesTransferred: 0,
       totalBytes: 0,
@@ -98,8 +108,17 @@ export default {
         }
       );
     },
-    upload_database(){
-      alert('Database!');
+    async upload_database() {
+      const videoId = this.externalLink.split("?v=")[1].split("&list=");
+      await firebase
+        .database()
+        .ref("music/" + videoId[0])
+        .set({
+          videoURL: this.externalLink
+        });
+      this.progressState = `Video url uploaded successfully!`;
+      this.isSuccess = true;
+        
     }
   }
 };
@@ -145,7 +164,7 @@ export default {
     margin-bottom: 10px
     text-align: center
     &-outer
-        width: 75%;
+        width: 75%
         margin: 0 auto 30px
     &-inner
         position: absolute
