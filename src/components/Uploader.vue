@@ -6,41 +6,41 @@
         id="file_uploader"
         @change="handleFile"
         type="file"
-        :disabled="Boolean(externalLink)"
+        :disabled="Boolean(database.externalLink)"
         hidden
       />
       <label for="file_uploader" class="uploader-placeholder-btn">
         Choose file
         <font-awesome-icon :icon="['fas', 'plus-circle']" />
       </label>
-      <span>{{fileName}}</span>
+      <span>{{storage.fileName}}</span>
       <p>Or</p>
     </div>
     <div class="external-link">
       <div class="external-link-inner">
         <label for>Copy/paste an external link e.g. youtube</label>
-        <input type="text" v-model="externalLink" :disabled="blob" />
+        <input type="text" v-model="database.externalLink" :disabled="storage.blob" />
       </div>
     </div>
-    <div v-if="isProgress" class="progress-outer">
-      <Success :progressState="progressState" :isSuccess="isSuccess" />
+    <div v-if="storage.isProgress" class="progress-outer">
+      <ProgressState :progressState="storage.progressState" :isSuccess="storage.isSuccess" />
       <div class="progress">
-        <span>{{progress}}%</span>
-        <span class="progress-inner" :style="{width: progress + '%'}"></span>
+        <span>{{storage.progress}}%</span>
+        <span class="progress-inner" :style="{width: storage.progress + '%'}"></span>
       </div>
-      <p v-html="(bytesTransferred / 1000000) + '/' + (totalBytes / 1000000) + ' MB'"></p>
+      <p v-html="(storage.bytesTransferred / 1000000) + '/' + (storage.totalBytes / 1000000) + ' MB'"></p>
     </div>
 
     <div class="uploader-btn-wrap">
       <button
-        :disabled="!blob && !externalLink"
+        :disabled="!storage.blob && !database.externalLink"
         class="uploader-btn"
-        v-on="{click : blob ? upload_storage : upload_database}"
+        v-on="{click : storage.blob ? upload_storage : upload_database}"
       >
         Upload
         <font-awesome-icon :icon="['fas', 'arrow-circle-up']" />
       </button>
-      
+      <ProgressState :progressState="database.progressState" :isSuccess="database.isSuccess" v-if="database.isSuccess" />
     </div>
   </div>
 </template>
@@ -49,23 +49,29 @@
 import firebase from "firebase/app";
 import "firebase/database";
 
-import Success from "./Success";
+import ProgressState from "./ProgressState";
 
 export default {
   components: {
-    Success
+    ProgressState
   },
   data() {
     return {
-      blob: null,
-      externalLink: "",
-      progress: 0,
-      bytesTransferred: 0,
-      totalBytes: 0,
-      progressState: "",
-      fileName: "No file has been chosen.",
-      isProgress: false,
-      isSuccess: false
+      storage: {
+        blob: null,
+        progress: 0,
+        bytesTransferred: 0,
+        totalBytes: 0,
+        progressState: "",
+        fileName: "No file has been chosen.",
+        isProgress: false,
+        isSuccess: false
+      },
+      database: {
+        externalLink: "",
+        progressState: "",
+        isSuccess: false
+      }
     };
   },
   methods: {
@@ -77,48 +83,60 @@ export default {
         return;
       }
       const { name } = file;
-      this.blob = file;
-      this.fileName = name;
+      this.storage.blob = file;
+      this.storage.fileName = name;
     },
     upload_storage() {
-      const { name } = this.blob;
+      //Reset Database states
+      this.database.progressState = '';
+      this.database.isSuccess = false;
+
+      const { name } = this.storage.blob;
       const storageRef = firebase.storage().ref("music/" + name);
-      const task = storageRef.put(this.blob);
+      const task = storageRef.put(this.storage.blob);
       task.on(
         "state_changed",
         snapshot => {
           const { bytesTransferred, totalBytes, state } = snapshot;
           if (state === "running") {
             const progress = Math.floor((bytesTransferred / totalBytes) * 100);
-            this.progressState = "Uploading to Firebase storage...";
-            this.progress = progress;
-            this.bytesTransferred = bytesTransferred;
-            this.totalBytes = totalBytes;
-            this.isProgress = true;
+            this.storage.progressState = "Uploading to Firebase storage...";
+            this.storage.progress = progress;
+            this.storage.bytesTransferred = bytesTransferred;
+            this.storage.totalBytes = totalBytes;
+            this.storage.isProgress = true;
           }
         },
         function error() {},
         () => {
-          this.progressState = `Uploading is done successfully`;
-          this.isSuccess = true;
+          this.storage.progressState = `Uploading is done successfully`;
+          this.storage.isSuccess = true;
 
-          //reset
-          this.blob = null;
-          this.fileName = "";
+          //Reset
+          this.storage.blob = null;
+          this.storage.fileName = "";
         }
       );
     },
     async upload_database() {
-      const videoId = this.externalLink.split("?v=")[1].split("&list=");
+      //Reset Storage states
+      this.storage.isProgress = false;
+      this.storage.progressState = '';
+      this.storage.isSuccess = false;
+
+      const videoId = this.database.externalLink.split("?v=")[1].split("&list=");
       await firebase
         .database()
         .ref("music/" + videoId[0])
         .set({
-          videoURL: this.externalLink
+          videoURL: this.database.externalLink
         });
-      this.progressState = `Video url uploaded successfully!`;
-      this.isSuccess = true;
-        
+      this.database.progressState = `Video url uploaded successfully!`;
+      this.database.isSuccess = true;
+
+      //Reset 
+      this.database.externalLink = ''
+
     }
   }
 };
