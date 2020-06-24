@@ -19,7 +19,9 @@
     <div class="external-link">
       <div class="external-link-inner">
         <label for>Copy/paste an external link e.g. youtube</label>
-        <input type="text" v-model="database.externalLink" :disabled="storage.blob" />
+        <input type="text" v-model="database.externalLink" :disabled="storage.blob" @change="validateURL" />
+        <font-awesome-icon v-if="database.isValid" :icon="['fas', 'check-circle']" :style="{color: 'lightgreen'}"/>
+        <p class="error" v-if="database.isError">{{database.errorMsg}}</p>
       </div>
     </div>
     <div v-if="storage.isProgress" class="progress-outer">
@@ -33,7 +35,7 @@
 
     <div class="uploader-btn-wrap">
       <button
-        :disabled="!storage.blob && !database.externalLink"
+        :disabled="(!storage.blob && !database.externalLink )|| database.isError"
         class="uploader-btn"
         v-on="{click : storage.blob ? upload_storage : upload_database}"
       >
@@ -70,7 +72,10 @@ export default {
       database: {
         externalLink: "",
         progressState: "",
-        isSuccess: false
+        isSuccess: false,
+        isError: false,
+        isValid: false,
+        errorMsg: 'You need to input a vaild youtube video URL.'
       }
     };
   },
@@ -135,11 +140,26 @@ export default {
       this.database.isSuccess = true;
 
       //Reset 
+      this.database.isError = false;
+      this.database.isValid = false;
       this.database.externalLink = ''
 
+    },
+    validateURL(){
+      if(!/https:\/\/www.youtube.com\/watch\?v=\w+/g.test(this.database.externalLink)){
+        if (!this.database.externalLink){
+          this.database.isError = false;
+          return;
+        }
+        this.database.isError = true;
+        this.database.isValid = false;
+        return;
+      }  
+      this.database.isError = false;
+      this.database.isValid = true;
     }
   }
-};
+}
 </script>
 
 <style scoped lang="sass">
@@ -171,6 +191,7 @@ export default {
       margin-bottom: 10px
     input
       width: 300px
+      margin-right: 10px
     &-inner
       text-align: left
       display: inline-block
@@ -195,4 +216,8 @@ export default {
   &:disabled + label
     background-color: $disabled
     cursor: not-allowed
+
+.error
+  color: red
+  margin-top: 10px
 </style>
