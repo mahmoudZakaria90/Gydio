@@ -51,7 +51,7 @@
 import firebase from "firebase/app";
 import "firebase/database";
 
-import ProgressState from "./ProgressState";
+import ProgressState from "../components/ProgressState";
 
 export default {
   components: {

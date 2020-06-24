@@ -2,7 +2,7 @@
   <div id="app">
     <header>
       <nav>
-        <a href>Explore</a>
+        <router-link to="/explore">Explore</router-link>
       </nav>
     </header>
     <div class="container">
@@ -10,19 +10,14 @@
         <h1>Gydio</h1>
         <p>Your favorite place for Music, themes and soundtracks of Gaming.</p>
       </div>
-      <Uploader />
+      <router-view></router-view>
     </div>
   </div>
 </template>
 
 <script>
-import Uploader from "./components/Uploader";
 
 export default {
-  name: "App",
-  components: {
-    Uploader
-  }
 };
 </script>
 

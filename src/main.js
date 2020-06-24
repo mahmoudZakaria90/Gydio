@@ -1,15 +1,16 @@
-import Vue from 'vue'
-import App from './App.vue'
+import Vue from 'vue';
+import App from './App.vue';
+import router from './routes';
 import firebase from "firebase/app";
 import "firebase/storage";
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { faPlusCircle, faCheckCircle, faArrowCircleUp } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
-import "./assets/sass/index.sass"
+import "./assets/sass/index.sass";
 
-library.add(faPlusCircle, faCheckCircle, faArrowCircleUp)
+library.add(faPlusCircle, faCheckCircle, faArrowCircleUp);
 
-Vue.component('font-awesome-icon', FontAwesomeIcon)
+Vue.component('font-awesome-icon', FontAwesomeIcon);
 
 
 // Your web app's Firebase configuration
@@ -29,4 +30,5 @@ Vue.config.productionTip = false
 
 new Vue({
   render: h => h(App),
+  router
 }).$mount('#app')
