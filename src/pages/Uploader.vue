@@ -4,13 +4,17 @@
        <router-link to="/explore">Explore</router-link>
     </Header>
     <div class="uploader container">
+      <div class="intro">
+        <h1>Gydio</h1>
+        <p>Your favorite place for Music, themes and soundtracks of Gaming.</p>
+      </div>
       <h2 class="uploader-title">Upload your fav track.</h2>
       <div class="uploader-placeholder">
         <input
           id="file_uploader"
           @change="handleFile"
           type="file"
-          :disabled="Boolean(database.externalLink)"
+          :disabled="Boolean(database.externalLink) || storage.isProgress"
           hidden
         />
         <label for="file_uploader" class="uploader-placeholder-btn">
@@ -39,7 +43,7 @@
 
       <div class="uploader-btn-wrap">
         <button
-          :disabled="(!storage.blob && !database.externalLink )|| database.isError"
+          :disabled="(!storage.blob && !database.externalLink )|| database.isError || storage.isProgress"
           class="uploader-btn"
           v-on="{click : storage.blob ? upload_storage : upload_database}"
         >
@@ -60,6 +64,7 @@ import ProgressState from "../components/ProgressState";
 import Header from "../components/Header";
 
 export default {
+  name: 'Uploader',
   components: {
     ProgressState,
     Header
@@ -126,6 +131,7 @@ export default {
 
           //Reset
           this.storage.blob = null;
+          this.storage.isProgress = false;
           this.storage.fileName = "";
         }
       );
@@ -171,6 +177,10 @@ export default {
 
 <style scoped lang="sass">
 @import '../assets/sass/placeholders'
+
+.intro
+  padding-top: 30px
+  margin-bottom: 50px
 
 .uploader
     &-title

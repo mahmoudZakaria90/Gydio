@@ -18,6 +18,16 @@ body
     margin: 0 auto
     padding: 0 15px
 
+.row
+    margin: 0 -15px
+    display: flex
+    flex-wrap: wrap
+
+img
+    max-width: 100%
+    vertical-align: middle
+    display: block
+
 header
     padding: 15px
 
@@ -40,3 +50,6 @@ input[type="text"]
 input
     &:disabled
         cursor: not-allowed
+
+button
+  @extend %button
