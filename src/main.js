@@ -8,6 +8,7 @@ import { faPlusCircle, faCheckCircle, faArrowCircleUp } from '@fortawesome/free-
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import "./assets/sass/index.sass";
 
+
 library.add(faPlusCircle, faCheckCircle, faArrowCircleUp);
 
 Vue.component('font-awesome-icon', FontAwesomeIcon);

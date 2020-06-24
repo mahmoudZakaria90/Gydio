@@ -1,5 +1,6 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
+
 import Uploader from './pages/Uploader';
 import Explore from './pages/Explore';
 

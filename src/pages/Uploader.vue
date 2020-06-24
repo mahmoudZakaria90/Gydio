@@ -1,48 +1,53 @@
 <template>
-  <div class="uploader">
-    <h2 class="uploader-title">Upload your fav track.</h2>
-    <div class="uploader-placeholder">
-      <input
-        id="file_uploader"
-        @change="handleFile"
-        type="file"
-        :disabled="Boolean(database.externalLink)"
-        hidden
-      />
-      <label for="file_uploader" class="uploader-placeholder-btn">
-        Choose file
-        <font-awesome-icon :icon="['fas', 'plus-circle']" />
-      </label>
-      <span>{{storage.fileName}}</span>
-      <p>Or</p>
-    </div>
-    <div class="external-link">
-      <div class="external-link-inner">
-        <label for>Copy/paste an external link e.g. youtube</label>
-        <input type="text" v-model="database.externalLink" :disabled="storage.blob" @change="validateURL" />
-        <font-awesome-icon v-if="database.isValid" :icon="['fas', 'check-circle']" :style="{color: 'lightgreen'}"/>
-        <p class="error" v-if="database.isError">{{database.errorMsg}}</p>
+  <div>
+    <Header>
+       <router-link to="/explore">Explore</router-link>
+    </Header>
+    <div class="uploader container">
+      <h2 class="uploader-title">Upload your fav track.</h2>
+      <div class="uploader-placeholder">
+        <input
+          id="file_uploader"
+          @change="handleFile"
+          type="file"
+          :disabled="Boolean(database.externalLink)"
+          hidden
+        />
+        <label for="file_uploader" class="uploader-placeholder-btn">
+          Choose file
+          <font-awesome-icon :icon="['fas', 'plus-circle']" />
+        </label>
+        <span>{{storage.fileName}}</span>
+        <p>Or</p>
       </div>
-    </div>
-    <div v-if="storage.isProgress" class="progress-outer">
-      <ProgressState :progressState="storage.progressState" :isSuccess="storage.isSuccess" />
-      <div class="progress">
-        <span>{{storage.progress}}%</span>
-        <span class="progress-inner" :style="{width: storage.progress + '%'}"></span>
+      <div class="external-link">
+        <div class="external-link-inner">
+          <label for>Copy/paste an external link e.g. youtube</label>
+          <input type="text" v-model="database.externalLink" :disabled="storage.blob" @change="validateURL" />
+          <font-awesome-icon v-if="database.isValid" :icon="['fas', 'check-circle']" :style="{color: 'lightgreen'}"/>
+          <p class="error" v-if="database.isError">{{database.errorMsg}}</p>
+        </div>
       </div>
-      <p v-html="(storage.bytesTransferred / 1000000) + '/' + (storage.totalBytes / 1000000) + ' MB'"></p>
-    </div>
+      <div v-if="storage.isProgress" class="progress-outer">
+        <ProgressState :progressState="storage.progressState" :isSuccess="storage.isSuccess" />
+        <div class="progress">
+          <span>{{storage.progress}}%</span>
+          <span class="progress-inner" :style="{width: storage.progress + '%'}"></span>
+        </div>
+        <p v-html="(storage.bytesTransferred / 1000000) + '/' + (storage.totalBytes / 1000000) + ' MB'"></p>
+      </div>
 
-    <div class="uploader-btn-wrap">
-      <button
-        :disabled="(!storage.blob && !database.externalLink )|| database.isError"
-        class="uploader-btn"
-        v-on="{click : storage.blob ? upload_storage : upload_database}"
-      >
-        Upload
-        <font-awesome-icon :icon="['fas', 'arrow-circle-up']" />
-      </button>
-      <ProgressState :progressState="database.progressState" :isSuccess="database.isSuccess" v-if="database.isSuccess" />
+      <div class="uploader-btn-wrap">
+        <button
+          :disabled="(!storage.blob && !database.externalLink )|| database.isError"
+          class="uploader-btn"
+          v-on="{click : storage.blob ? upload_storage : upload_database}"
+        >
+          Upload
+          <font-awesome-icon :icon="['fas', 'arrow-circle-up']" />
+        </button>
+        <ProgressState :progressState="database.progressState" :isSuccess="database.isSuccess" v-if="database.isSuccess" />
+      </div>
     </div>
   </div>
 </template>
@@ -52,10 +57,12 @@ import firebase from "firebase/app";
 import "firebase/database";
 
 import ProgressState from "../components/ProgressState";
+import Header from "../components/Header";
 
 export default {
   components: {
-    ProgressState
+    ProgressState,
+    Header
   },
   data() {
     return {
