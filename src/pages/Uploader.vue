@@ -130,9 +130,11 @@ export default {
           this.storage.isSuccess = true;
 
           //Reset
-          this.storage.blob = null;
-          this.storage.isProgress = false;
-          this.storage.fileName = "";
+          setTimeout(() => {
+            this.storage.blob = null;
+            this.storage.isProgress = false;
+            this.storage.fileName = "";
+          }, 2000);
         }
       );
     },
@@ -153,9 +155,12 @@ export default {
       this.database.isSuccess = true;
 
       //Reset 
-      this.database.isError = false;
-      this.database.isValid = false;
-      this.database.externalLink = ''
+      setTimeout(() => {
+        this.database.isError = false;
+        this.database.isValid = false;
+        this.database.isSuccess = false;
+        this.database.externalLink = ''
+      }, 2000);
 
     },
     validateURL(){
