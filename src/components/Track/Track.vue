@@ -1,5 +1,5 @@
 <template>
-  <div class="track col">
+  <div class="track col" @click="()=> callback(name)">
     <div class="track-placeholder">
       <img :src="img || placeholder" alt />
     </div>
@@ -12,7 +12,8 @@ import placeholder from '../../assets/images/Placeholder.svg';
 export default {
   props: {
     name: String,
-    img: String
+    img: String,
+    callback: Function
   },
   data(){
       return {
@@ -25,6 +26,7 @@ export default {
 <style scoped lang="sass">
   .track
     margin-bottom: 30px
+    cursor: pointer
     &-name
       overflow: hidden
       text-overflow: ellipsis

@@ -24,6 +24,8 @@ export default {
         & .col
             padding: 0 15px
             max-width: 100%
+        & .row
+            flex-grow: 1
         &.container
             margin: 0 auto
         &.col-1
