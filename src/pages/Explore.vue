@@ -9,7 +9,7 @@
         <Track v-for="track in tracks" :key="track" :name="track" :callback="changeSelectedTrack" />
       </TrackWrapper>
     </div>
-    <audio :src="selectedTrack" autoplay controls></audio>
+    <audio :src="selectedTrack" autoplay controls controlsList="nodownload"></audio>
   </div>
 </template>
 
