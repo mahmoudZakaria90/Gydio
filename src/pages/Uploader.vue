@@ -117,7 +117,7 @@ export default {
           const { bytesTransferred, totalBytes, state } = snapshot;
           if (state === "running") {
             const progress = Math.floor((bytesTransferred / totalBytes) * 100);
-            this.storage.progressState = "Uploading to Firebase storage...";
+            this.storage.progressState = `Uploading ${name} to Firebase storage...`;
             this.storage.progress = progress;
             this.storage.bytesTransferred = bytesTransferred;
             this.storage.totalBytes = totalBytes;
