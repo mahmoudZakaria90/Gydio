@@ -1,5 +1,5 @@
 <template>
-  <p>
+  <p :class="{isCancelled}">
     {{progressState}}
     <font-awesome-icon
       :icon="['fas', 'check-circle']"
@@ -13,10 +13,13 @@
 export default {
   props: {
     progressState: String,
-    isSuccess: Boolean
+    isSuccess: Boolean,
+    isCancelled: Boolean
   }
 };
 </script>
 
-<style>
+<style scoped lang="sass">
+  .isCancelled
+    color: red
 </style>

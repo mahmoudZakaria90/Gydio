@@ -33,10 +33,11 @@
         </div>
       </div>
       <div v-if="storage.isProgress" class="progress-outer">
-        <ProgressState :progressState="storage.progressState" :isSuccess="storage.isSuccess" />
+        <ProgressState :progressState="storage.progressState" :isSuccess="storage.isSuccess" :isCancelled="storage.isCancelled" />
         <div class="progress">
           <span>{{storage.progress}}%</span>
           <span class="progress-inner" :style="{width: storage.progress + '%'}"></span>
+          <span ref="cancelUploadEl"><font-awesome-icon :icon="['far', 'times-circle']" /></span>
         </div>
         <p v-html="(storage.bytesTransferred / 1000000) + '/' + (storage.totalBytes / 1000000) + ' MB'"></p>
       </div>
@@ -79,7 +80,8 @@ export default {
         progressState: "",
         fileName: "No file has been chosen.",
         isProgress: false,
-        isSuccess: false
+        isSuccess: false,
+        storage: false,
       },
       database: {
         externalLink: "",
@@ -111,6 +113,15 @@ export default {
       const { name } = this.storage.blob;
       const storageRef = firebase.storage().ref("music/" + name);
       const task = storageRef.put(this.storage.blob);
+
+      //For cancelling the uploading
+      //Not the most recommended way
+      this.cancelUpload = () => {
+          if(this.$refs.cancelUploadEl){
+          this.$refs.cancelUploadEl.addEventListener('click', () => task.cancel())
+        }
+      }
+
       task.on(
         "state_changed",
         snapshot => {
@@ -124,17 +135,25 @@ export default {
             this.storage.isProgress = true;
           }
         },
-        function error() {},
+        (err) => {
+          this.storage.isCancelled = true;
+          this.storage.progressState = err.message;
+
+          //Reset
+          this.resetState('storage', [
+            {key: 'isProgress', value: false},
+          ], 2000)
+        },
         () => {
           this.storage.progressState = `Uploading is done successfully`;
           this.storage.isSuccess = true;
 
           //Reset
-          setTimeout(() => {
-            this.storage.blob = null;
-            this.storage.isProgress = false;
-            this.storage.fileName = "";
-          }, 2000);
+          this.resetState('storage', [
+            {key: 'blob', value: null},
+            {key: 'isProgress', value: false},
+            {key: 'fileName', value: ""}
+          ], 2000)
         }
       );
     },
@@ -154,14 +173,23 @@ export default {
       this.database.progressState = `Video url uploaded successfully!`;
       this.database.isSuccess = true;
 
-      //Reset 
-      setTimeout(() => {
-        this.database.isError = false;
-        this.database.isValid = false;
-        this.database.isSuccess = false;
-        this.database.externalLink = ''
-      }, 2000);
+       //Reset
+       this.resetState('database', [
+        {key: 'isError', value: false},
+        {key: 'isValid', value: false},
+        {key: 'isSuccess', value: false},
+        {key: 'externalLink', value: ''},
+      ], 2000)
+      
 
+    },
+    cancelUpload(){},
+    resetState(state, options, timeout){
+      options.forEach(option => {
+        setTimeout(() => {
+          this[state][option.key] = option.value
+        }, timeout);
+      })
     },
     validateURL(){
       if(!/https:\/\/www.youtube.com\/watch\?v=\w+/g.test(this.database.externalLink)){
@@ -176,6 +204,9 @@ export default {
       this.database.isError = false;
       this.database.isValid = true;
     }
+  },
+  updated(){
+     this.cancelUpload()
   }
 }
 </script>
@@ -234,6 +265,13 @@ export default {
         bottom: 0
         background-color: $green
         z-index: -1
+        & + span
+          position: absolute
+          right: -40px
+          top: -3px
+          color: red
+          font-size: 25px
+          cursor: pointer
 #file_uploader
   &:disabled + label
     background-color: $disabled
