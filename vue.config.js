@@ -1,4 +1,3 @@
 module.exports = {
-  publicPath:
-    process.env.NODE_ENV === "production" ? "/Loan-calculator/dist/" : ""
+  publicPath: process.env.NODE_ENV === "production" ? "/Gydio/dist/" : "",
 };
