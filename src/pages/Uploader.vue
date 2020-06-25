@@ -138,7 +138,6 @@ export default {
         (err) => {
           this.storage.isCancelled = true;
           this.storage.progressState = err.message;
-
           //Reset
           this.resetState('storage', [
             {key: 'isProgress', value: false},
@@ -163,12 +162,13 @@ export default {
       this.storage.progressState = '';
       this.storage.isSuccess = false;
 
-      const videoId = this.database.externalLink.split("?v=")[1].split("&list=");
+      const [videoId] = this.database.externalLink.split("?v=")[1].split("&list=");
+      const [videoURL] = this.database.externalLink.split("&list=");
       await firebase
         .database()
-        .ref("music/" + videoId[0])
+        .ref("music/" + videoId)
         .set({
-          videoURL: this.database.externalLink
+          videoURL
         });
       this.database.progressState = `Video url uploaded successfully!`;
       this.database.isSuccess = true;

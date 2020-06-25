@@ -9,6 +9,12 @@
         <Track v-for="track in tracks" :key="track" :name="track" :callback="changeSelectedTrack" />
       </TrackWrapper>
     </div>
+    <div class="container">
+      <h1>External videos 'Youtube'</h1>
+      <TrackWrapper :row="true" :basis="'col-6'">
+        <ExternalTrack v-for="track in externalTracks" :key="track.id" :videoURL="track.videoURL"/>
+      </TrackWrapper>
+    </div>
     <audio :src="selectedTrack" autoplay controls controlsList="nodownload"></audio>
   </div>
 </template>
@@ -21,18 +27,21 @@ import Header from "../components/Header";
 
 import TrackWrapper from "../components/Track/Wrapper";
 import Track from "../components/Track/Track";
+import ExternalTrack from "../components/Track/ExternalTrack";
 
 export default {
   name: "Explore",
   components: {
     Header,
     Track,
-    TrackWrapper
+    TrackWrapper,
+    ExternalTrack
   },
   data() {
     return {
       tracks: null,
-      selectedTrack: null
+      selectedTrack: null,
+      externalTracks: null
     };
   },
   methods: {
@@ -43,8 +52,17 @@ export default {
   },
   async mounted() {
     const storageRef = firebase.storage().ref("music");
+    const databaseFetch = await fetch('https://musicstream-cb9d3.firebaseio.com/music.json');
+    const databaseResult = await databaseFetch.json();
     const { items } = await storageRef.listAll();
     this.tracks = items.map(item => item.name);
+    this.externalTracks = Object.entries(databaseResult).map(([id, {videoURL}]) => {
+      const trimmedURL = videoURL.replace('watch?v=', 'embed/');
+      return {
+        id,
+        videoURL: trimmedURL
+      }
+    })
   }
 };
 </script>

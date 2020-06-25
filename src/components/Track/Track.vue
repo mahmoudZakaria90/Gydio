@@ -25,7 +25,6 @@ export default {
 
 <style scoped lang="sass">
   .track
-    margin-bottom: 30px
     cursor: pointer
     &-name
       overflow: hidden
