@@ -121,7 +121,8 @@ export default {
         isSuccess: false,
         isError: false,
         isValid: false,
-        errorMsg: "You need to input a vaild youtube video URL."
+        errorMsg: "You need to input a vaild youtube video URL.",
+        pattern: /https:\/\/www.youtube.com\/watch\?v=\w+/g
       }
     };
   },
@@ -202,13 +203,14 @@ export default {
       this.storage.progressState = null;
       this.storage.isSuccess = false;
 
-      const [videoId] = this.database.externalLink
-        .split("?v=")[1]
-        .split("&list=");
-      const [videoURL] = this.database.externalLink.split("&list=");
+      const [videoId] = this.database.externalLink.match(this.database.pattern);
+      const [, videoIdSplitted] = videoId.split("watch?v=");
+      const [videoURL] = this.database.externalLink.match(
+        this.database.pattern
+      );
       await firebase
         .database()
-        .ref("music/" + videoId)
+        .ref("music/" + videoIdSplitted)
         .set({
           videoURL
         });
@@ -236,11 +238,7 @@ export default {
       });
     },
     validateURL() {
-      if (
-        !/https:\/\/www.youtube.com\/watch\?v=\w+/g.test(
-          this.database.externalLink
-        )
-      ) {
+      if (!this.database.pattern.test(this.database.externalLink)) {
         if (!this.database.externalLink) {
           this.database.isError = false;
           return;
