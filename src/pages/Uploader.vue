@@ -1,7 +1,9 @@
 <template>
   <div>
     <Header>
-       <router-link to="/explore">Explore</router-link>
+      <template v-slot:nav-left>
+        <router-link to="/explore">Explore</router-link>
+      </template>
     </Header>
     <div class="uploader container">
       <div class="intro">
@@ -14,44 +16,74 @@
           id="file_uploader"
           @change="handleFile"
           type="file"
-          :disabled="Boolean(database.externalLink) || storage.isProgress"
+          :disabled="database.externalLink || storage.isProgress"
           hidden
         />
         <label for="file_uploader" class="uploader-placeholder-btn">
           Choose file
           <font-awesome-icon :icon="['fas', 'plus-circle']" />
         </label>
-        <span>{{storage.fileName}}</span>
+        <span>{{ storage.fileName }}</span>
         <p>Or</p>
       </div>
       <div class="external-link">
         <div class="external-link-inner">
           <label for>Copy/paste an external link e.g. youtube</label>
-          <input type="text" v-model="database.externalLink" :disabled="storage.blob" @change="validateURL" />
-          <font-awesome-icon v-if="database.isValid" :icon="['fas', 'check-circle']" :style="{color: 'lightgreen'}"/>
-          <p class="error" v-if="database.isError">{{database.errorMsg}}</p>
+          <input
+            type="text"
+            v-model="database.externalLink"
+            :disabled="storage.blob"
+            @change="validateURL"
+          />
+          <font-awesome-icon
+            v-if="database.isValid"
+            :icon="['fas', 'check-circle']"
+            :style="{ color: 'lightgreen' }"
+          />
+          <p class="error" v-if="database.isError">{{ database.errorMsg }}</p>
         </div>
       </div>
       <div v-if="storage.isProgress" class="progress-outer">
-        <ProgressState :progressState="storage.progressState" :isSuccess="storage.isSuccess" :isCancelled="storage.isCancelled" />
+        <ProgressState
+          :progressState="storage.progressState"
+          :isSuccess="storage.isSuccess"
+          :isCancelled="storage.isCancelled"
+        />
         <div class="progress">
-          <span>{{storage.progress}}%</span>
-          <span class="progress-inner" :style="{width: storage.progress + '%'}"></span>
-          <span ref="cancelUploadEl"><font-awesome-icon :icon="['far', 'times-circle']" /></span>
+          <span>{{ storage.progress }}%</span>
+          <span class="progress-inner" :style="{ width: storage.progress + '%' }"></span>
+          <span ref="cancelUploadEl">
+            <font-awesome-icon :icon="['far', 'times-circle']" />
+          </span>
         </div>
-        <p v-html="(storage.bytesTransferred / 1000000) + '/' + (storage.totalBytes / 1000000) + ' MB'"></p>
+        <p
+          v-html="
+            storage.bytesTransferred / 1000000 +
+              '/' +
+              storage.totalBytes / 1000000 +
+              ' MB'
+          "
+        ></p>
       </div>
 
       <div class="uploader-btn-wrap">
         <button
-          :disabled="(!storage.blob && !database.externalLink )|| database.isError || storage.isProgress"
+          :disabled="
+            (!storage.blob && !database.externalLink) ||
+              database.isError ||
+              storage.isProgress
+          "
           class="uploader-btn"
-          v-on="{click : storage.blob ? upload_storage : upload_database}"
+          v-on="{ click: storage.blob ? upload_storage : upload_database }"
         >
           Upload
           <font-awesome-icon :icon="['fas', 'arrow-circle-up']" />
         </button>
-        <ProgressState :progressState="database.progressState" :isSuccess="database.isSuccess" v-if="database.isSuccess" />
+        <ProgressState
+          :progressState="database.progressState"
+          :isSuccess="database.isSuccess"
+          v-if="database.isSuccess"
+        />
       </div>
     </div>
   </div>
@@ -65,7 +97,7 @@ import ProgressState from "../components/ProgressState";
 import Header from "../components/Header";
 
 export default {
-  name: 'Uploader',
+  name: "Uploader",
   components: {
     ProgressState,
     Header
@@ -77,19 +109,19 @@ export default {
         progress: 0,
         bytesTransferred: 0,
         totalBytes: 0,
-        progressState: "",
-        fileName: "No file has been chosen.",
+        progressState: null,
+        fileName: null,
         isProgress: false,
         isSuccess: false,
-        storage: false,
+        storage: false
       },
       database: {
-        externalLink: "",
-        progressState: "",
+        externalLink: null,
+        progressState: null,
         isSuccess: false,
         isError: false,
         isValid: false,
-        errorMsg: 'You need to input a vaild youtube video URL.'
+        errorMsg: "You need to input a vaild youtube video URL."
       }
     };
   },
@@ -107,7 +139,7 @@ export default {
     },
     upload_storage() {
       //Reset Database states
-      this.database.progressState = '';
+      this.database.progressState = null;
       this.database.isSuccess = false;
 
       const { name } = this.storage.blob;
@@ -117,10 +149,12 @@ export default {
       //For cancelling the uploading
       //Not the most recommended way
       this.cancelUpload = () => {
-          if(this.$refs.cancelUploadEl){
-          this.$refs.cancelUploadEl.addEventListener('click', () => task.cancel())
+        if (this.$refs.cancelUploadEl) {
+          this.$refs.cancelUploadEl.addEventListener("click", () =>
+            task.cancel()
+          );
         }
-      }
+      };
 
       task.on(
         "state_changed",
@@ -135,34 +169,42 @@ export default {
             this.storage.isProgress = true;
           }
         },
-        (err) => {
+        err => {
           this.storage.isCancelled = true;
           this.storage.progressState = err.message;
           //Reset
-          this.resetState('storage', [
-            {key: 'isProgress', value: false},
-          ], 2000)
+          this.resetState(
+            "storage",
+            [{ key: "isProgress", value: false }],
+            2000
+          );
         },
         () => {
           this.storage.progressState = `Uploading is done successfully`;
           this.storage.isSuccess = true;
 
           //Reset
-          this.resetState('storage', [
-            {key: 'blob', value: null},
-            {key: 'isProgress', value: false},
-            {key: 'fileName', value: ""}
-          ], 2000)
+          this.resetState(
+            "storage",
+            [
+              { key: "blob", value: null },
+              { key: "isProgress", value: false },
+              { key: "fileName", value: null }
+            ],
+            2000
+          );
         }
       );
     },
     async upload_database() {
       //Reset Storage states
       this.storage.isProgress = false;
-      this.storage.progressState = '';
+      this.storage.progressState = null;
       this.storage.isSuccess = false;
 
-      const [videoId] = this.database.externalLink.split("?v=")[1].split("&list=");
+      const [videoId] = this.database.externalLink
+        .split("?v=")[1]
+        .split("&list=");
       const [videoURL] = this.database.externalLink.split("&list=");
       await firebase
         .database()
@@ -173,42 +215,48 @@ export default {
       this.database.progressState = `Video url uploaded successfully!`;
       this.database.isSuccess = true;
 
-       //Reset
-       this.resetState('database', [
-        {key: 'isError', value: false},
-        {key: 'isValid', value: false},
-        {key: 'isSuccess', value: false},
-        {key: 'externalLink', value: ''},
-      ], 2000)
-      
-
+      //Reset
+      this.resetState(
+        "database",
+        [
+          { key: "isError", value: false },
+          { key: "isValid", value: false },
+          { key: "isSuccess", value: false },
+          { key: "externalLink", value: "" }
+        ],
+        2000
+      );
     },
-    cancelUpload(){},
-    resetState(state, options, timeout){
+    cancelUpload() {},
+    resetState(state, options, timeout) {
       options.forEach(option => {
         setTimeout(() => {
-          this[state][option.key] = option.value
+          this[state][option.key] = option.value;
         }, timeout);
-      })
+      });
     },
-    validateURL(){
-      if(!/https:\/\/www.youtube.com\/watch\?v=\w+/g.test(this.database.externalLink)){
-        if (!this.database.externalLink){
+    validateURL() {
+      if (
+        !/https:\/\/www.youtube.com\/watch\?v=\w+/g.test(
+          this.database.externalLink
+        )
+      ) {
+        if (!this.database.externalLink) {
           this.database.isError = false;
           return;
         }
         this.database.isError = true;
         this.database.isValid = false;
         return;
-      }  
+      }
       this.database.isError = false;
       this.database.isValid = true;
     }
   },
-  updated(){
-     this.cancelUpload()
+  updated() {
+    this.cancelUpload();
   }
-}
+};
 </script>
 
 <style scoped lang="sass">
@@ -219,21 +267,21 @@ export default {
   margin-bottom: 50px
 
 .uploader
-    &-title
-      margin-bottom: 10px
-    &-placeholder
-        position: relative
-        text-align: center
-        & > p
-          margin: 20px 0
-          font-size: 18px
-          font-weight: 600
-          text-align: center
-        &-btn
-            @extend %button
+  &-title
+    margin-bottom: 10px
+  &-placeholder
+    position: relative
+    text-align: center
+    & > p
+      margin: 20px 0
+      font-size: 18px
+      font-weight: 600
+      text-align: center
     &-btn
-        &-wrap
-            text-align: center
+      @extend %button
+  &-btn
+    &-wrap
+      text-align: center
 
 .external
   &-link
@@ -250,28 +298,28 @@ export default {
       display: inline-block
 
 .progress
-    position: relative
-    line-height: 30px
-    border: 1px solid #ddd
-    margin-bottom: 10px
-    text-align: center
-    &-outer
-        width: 75%
-        margin: 0 auto 30px
-    &-inner
-        position: absolute
-        top: 0
-        left: 0
-        bottom: 0
-        background-color: $green
-        z-index: -1
-        & + span
-          position: absolute
-          right: -40px
-          top: -3px
-          color: red
-          font-size: 25px
-          cursor: pointer
+  position: relative
+  line-height: 30px
+  border: 1px solid #ddd
+  margin-bottom: 10px
+  text-align: center
+  &-outer
+    width: 75%
+    margin: 0 auto 30px
+  &-inner
+    position: absolute
+    top: 0
+    left: 0
+    bottom: 0
+    background-color: $green
+    z-index: -1
+    & + span
+      position: absolute
+      right: -40px
+      top: -3px
+      color: red
+      font-size: 25px
+      cursor: pointer
 #file_uploader
   &:disabled + label
     background-color: $disabled
