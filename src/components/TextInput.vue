@@ -1,10 +1,7 @@
 <template>
   <label>
     <span class="text-input-label">{{ label }}</span>
-    <font-awesome-icon
-      v-if="isValid"
-      :icon="isValid ? ['fas', 'check-circle'] : ['far', 'times-circle']"
-    ></font-awesome-icon>
+    <font-awesome-icon v-if="isValid" :icon=" ['fas', 'check-circle']"></font-awesome-icon>
     <input class="text-input" :type="inputType || 'text'" v-model="newVal" />
   </label>
 </template>
@@ -29,18 +26,13 @@ export default {
       required: true
     }
   },
-  computed: {
-    newVal: {
-      get() {
-        return this.value;
-      },
-      set() {
-        return this.value;
-      }
-    }
+  data() {
+    return {
+      newVal: this.value
+    };
   },
   watch: {
-    value() {
+    newVal() {
       this.$emit("input", this.newVal);
     }
   }
@@ -48,14 +40,14 @@ export default {
 </script>
 
 <style lang="sass" scoped>
-  .text-input
-    display: block
-    padding: 10px
-    border-radius: 5px
-    width: 100%
-    margin-top: 5px
-    margin-bottom: 20px
-    &-label
-      font-size: 20px
-      margin-right: 10px
+.text-input
+  display: block
+  padding: 10px
+  border-radius: 5px
+  width: 100%
+  margin-top: 5px
+  margin-bottom: 20px
+  &-label
+    font-size: 20px
+    margin-right: 10px
 </style>

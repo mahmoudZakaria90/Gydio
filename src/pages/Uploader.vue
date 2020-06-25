@@ -293,6 +293,7 @@ export default {
     input
       width: 300px
       margin-right: 10px
+      font-size: 14px
     &-inner
       text-align: left
       display: inline-block
@@ -316,7 +317,7 @@ export default {
     & + span
       position: absolute
       right: -40px
-      top: -3px
+      top: 0px
       color: red
       font-size: 25px
       cursor: pointer

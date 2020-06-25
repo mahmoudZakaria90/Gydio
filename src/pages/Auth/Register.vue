@@ -2,19 +2,17 @@
   <Dialog>
     <template v-slot:dialog-title>Register</template>
     <template v-slot:dialog-body>
-      <TextInput :label="'Email'" v-model="email" :isValid="true" />
+      <TextInput :label="'Email'" v-model="email" :isValid="Boolean(email)" />
       <TextInput
         :label="'Password'"
         :inputType="'password'"
-        @change="matchPassword"
-        :isValid="passwordMatch"
+        :isValid="matchPassword"
         v-model="password"
       />
       <TextInput
         :label="'Confirm password'"
         :inputType="'password'"
-        :isValid="passwordMatch"
-        @change="matchPassword"
+        :isValid="matchPassword"
         v-model="confirmPassword"
       />
     </template>
@@ -35,18 +33,16 @@ export default {
     return {
       email: "",
       password: "",
-      confirmPassword: "",
-      passwordMatch: false
+      confirmPassword: ""
     };
   },
-  methods: {
+  computed: {
     matchPassword() {
-      if (this.password === this.confirmPassword) {
-        this.passwordMatch = true;
-        console.log("Maaatch");
-        return;
-      }
-      this.passwordMatch = false;
+      return (
+        Boolean(this.password) &&
+        Boolean(this.confirmPassword) &&
+        this.password === this.confirmPassword
+      );
     }
   }
 };
