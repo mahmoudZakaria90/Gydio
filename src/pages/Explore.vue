@@ -6,7 +6,7 @@
       </template>
     </Header>
     <div class="container">
-      <p v-if="!tracks && !externalTracks">No tracks to show please upload some!</p>
+      <p v-if="!tracks && !externalTracks">{{loadingState}}</p>
       <h1 v-if="tracks">Explore</h1>
       <TrackWrapper :row="true" :basis="'col-4'">
         <Track v-for="track in tracks" :key="track" :name="track" :callback="changeSelectedTrack" />
@@ -44,7 +44,8 @@ export default {
     return {
       tracks: null,
       selectedTrack: null,
-      externalTracks: null
+      externalTracks: null,
+      loadingState: null
     };
   },
   methods: {
@@ -55,6 +56,7 @@ export default {
   },
   async mounted() {
     const storageRef = firebase.storage().ref("music");
+    this.loadingState = "Loading...";
     const { items } = await storageRef.listAll();
     this.tracks = items && items.map(item => item.name);
 
@@ -72,6 +74,9 @@ export default {
           videoURL: trimmedURL
         };
       });
+    if (!this.tracks.length && !this.externalTracks.length) {
+      this.loadingState = "No files to explore!";
+    }
   }
 };
 </script>
