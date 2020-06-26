@@ -1,17 +1,31 @@
 <template>
   <label>
-    <span class="text-input-label">{{ label }}</span>
+    <Message
+      v-if="isRequired && !Boolean(injectedVal)"
+      :text="'This field is required!'"
+      :color="'red'"
+    />
+    <span class="text-input-label">{{ label }} {{isRequired ? '*' : ''}}</span>
     <font-awesome-icon v-if="isValid" :icon=" ['fas', 'check-circle']"></font-awesome-icon>
-    <input class="text-input" :type="inputType || 'text'" v-model="newVal" />
+    <input class="text-input" :type="inputType || 'text'" v-model="injectedVal" />
+    <Message v-if="hasError" :color="'red'" :text="errorMsg" :icon="['far', 'times-circle']" />
   </label>
 </template>
 
 <script>
+import Message from "./Message";
 export default {
+  components: {
+    Message
+  },
   props: {
     label: {
       type: String,
       required: true
+    },
+    isRequired: {
+      type: Boolean,
+      required: false
     },
     inputType: {
       type: String,
@@ -24,16 +38,24 @@ export default {
     isValid: {
       type: Boolean,
       required: true
+    },
+    hasError: {
+      type: Boolean,
+      required: true
+    },
+    errorMsg: {
+      type: String,
+      required: false
     }
   },
   data() {
     return {
-      newVal: this.value
+      injectedVal: this.value
     };
   },
   watch: {
-    newVal() {
-      this.$emit("input", this.newVal);
+    injectedVal() {
+      this.$emit("input", this.injectedVal);
     }
   }
 };

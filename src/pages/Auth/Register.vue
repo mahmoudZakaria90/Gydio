@@ -6,42 +6,45 @@
     <Dialog>
       <template v-slot:dialog-title>Register</template>
       <template v-slot:dialog-body>
-        <TextInput :label="'Email'" v-model="email" :isValid="isEmail" />
-        <Message
-          v-if="isSubmitted && !Boolean(email)"
-          :color="'red'"
-          :text="'Please enter your email address.'"
-          :icon="['far', 'times-circle']"
-        />
-        <TextInput
-          :label="'Password'"
-          :inputType="'password'"
-          :isValid="matchPassword"
-          v-model="password"
-        />
-        <Message
-          v-if="isSubmitted && !password"
-          :color="'red'"
-          :text="'Please enter your password.'"
-          :icon="['far', 'times-circle']"
-        />
-        <TextInput
-          :label="'Confirm password'"
-          :inputType="'password'"
-          :isValid="matchPassword"
-          v-model="confirmPassword"
-        />
-        <Message
-          v-if="isSubmitted && !matchPassword"
-          :color="'red'"
-          :text="'Please match your passwords.'"
-          :icon="['far', 'times-circle']"
-        />
-        <div style="text-align: center">
-          <button @click="handleSubmit">Submit</button>
-        </div>
-        <Message v-if="isSuccess" :color="'green'" :text="'User has been created successfully'" />
-        <Message v-if="error" :color="'red'" :text="error.message" />
+        <form @submit="handleSubmit">
+          <TextInput
+            :label="'Email'"
+            :isRequired="isSubmitted"
+            :isValid="isEmail"
+            :hasError="email.hasError"
+            :errorMsg="email.errorMsg"
+            v-model="email.value"
+          />
+          <TextInput
+            :label="'Password'"
+            :inputType="'password'"
+            :isValid="matchPassword"
+            v-model="password"
+          />
+          <Message
+            v-if="isSubmitted && !password"
+            :color="'red'"
+            :text="'Please enter your password.'"
+            :icon="['far', 'times-circle']"
+          />
+          <TextInput
+            :label="'Confirm password'"
+            :inputType="'password'"
+            :isValid="matchPassword"
+            v-model="confirmPassword"
+          />
+          <Message
+            v-if="isSubmitted && !matchPassword"
+            :color="'red'"
+            :text="'Please match your passwords.'"
+            :icon="['far', 'times-circle']"
+          />
+          <div style="text-align: center">
+            <button type="submit">Submit</button>
+          </div>
+          <Message v-if="isSuccess" :color="'green'" :text="'User has been created successfully'" />
+          <Message v-if="hasError" :color="'red'" :text="hasError.message" />
+        </form>
       </template>
     </Dialog>
   </div>
@@ -64,18 +67,22 @@ export default {
   },
   data() {
     return {
-      email: "",
+      email: {
+        value: "",
+        hasError: false,
+        errorMsg: ""
+      },
       password: "",
       confirmPassword: "",
       isSubmitted: null,
       isSuccess: null,
-      error: ""
+      hasError: ""
     };
   },
   computed: {
     isEmail() {
       const pattern = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-      return Boolean(this.email) && pattern.test(this.email);
+      return pattern.test(this.email.value);
     },
     matchPassword() {
       return (
@@ -88,18 +95,26 @@ export default {
   methods: {
     async handleSubmit() {
       this.isSubmitted = true;
+      if (this.email.value && !this.isEmail) {
+        this.email.hasError = true;
+        this.email.errorMsg = "Enter a valid email address.";
+      } else {
+        this.email.hasError = false;
+        this.email.errorMsg = "";
+      }
       if (this.isEmail && this.matchPassword) {
         try {
           await firebase
             .auth()
-            .createUserWithEmailAndPassword(this.email, this.password);
+            .createUserWithEmailAndPassword(this.email.value, this.password);
           this.isSuccess = true;
           setTimeout(() => {
             this.$router.push("/");
           }, 3000);
+          this.hasError = false;
         } catch (error) {
           this.isSuccess = false;
-          this.error = error;
+          this.hasError = error;
         }
       }
     }
