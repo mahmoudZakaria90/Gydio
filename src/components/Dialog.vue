@@ -26,7 +26,6 @@ export default {};
   &-body
     width: 500px
     padding: 40px
-    min-height: 500px
     border-radius: 5px
     margin: auto
     background-color: #ddd

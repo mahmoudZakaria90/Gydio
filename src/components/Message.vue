@@ -1,0 +1,19 @@
+<template>
+  <p :style="{color}">
+    <span>{{text}}</span>
+    <font-awesome-icon v-if="icon" :icon="icon"></font-awesome-icon>
+  </p>
+</template>
+
+<script>
+export default {
+  props: {
+    text: String,
+    color: String,
+    icon: Array
+  }
+};
+</script>
+
+<style>
+</style>
