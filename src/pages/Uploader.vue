@@ -176,7 +176,10 @@ export default {
           //Reset
           this.resetState(
             "storage",
-            [{ key: "isProgress", value: false }],
+            [
+              { key: "isProgress", value: false },
+              { key: "isCancelled", value: false }
+            ],
             2000
           );
         },
