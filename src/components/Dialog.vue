@@ -20,7 +20,7 @@ export default {};
   &-outer
     display: flex
     background-color: #d6d6d6
-    height: 100%
+    height: 100vh
     align-items: center
     justify-content: center
   &-body

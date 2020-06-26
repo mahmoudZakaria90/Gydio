@@ -1,45 +1,50 @@
 <template>
-  <Dialog>
-    <template v-slot:dialog-title>Register</template>
-    <template v-slot:dialog-body>
-      <TextInput :label="'Email'" v-model="email" :isValid="isEmail" />
-      <Message
-        v-if="isSubmitted && !Boolean(email)"
-        :color="'red'"
-        :text="'Please enter your email address.'"
-        :icon="['far', 'times-circle']"
-      />
-      <TextInput
-        :label="'Password'"
-        :inputType="'password'"
-        :isValid="matchPassword"
-        v-model="password"
-      />
-      <Message
-        v-if="isSubmitted && !password"
-        :color="'red'"
-        :text="'Please enter your password.'"
-        :icon="['far', 'times-circle']"
-      />
-      <TextInput
-        :label="'Confirm password'"
-        :inputType="'password'"
-        :isValid="matchPassword"
-        v-model="confirmPassword"
-      />
-      <Message
-        v-if="isSubmitted && !matchPassword"
-        :color="'red'"
-        :text="'Please match your passwords.'"
-        :icon="['far', 'times-circle']"
-      />
-      <div style="text-align: center">
-        <button @click="handleSubmit">Submit</button>
-      </div>
-      <Message v-if="isSuccess" :color="'green'" :text="'User has been created successfully'" />
-      <Message v-if="error" :color="'red'" :text="error.message" />
-    </template>
-  </Dialog>
+  <div>
+    <Header>
+      <router-link to="/">Back</router-link>
+    </Header>
+    <Dialog>
+      <template v-slot:dialog-title>Register</template>
+      <template v-slot:dialog-body>
+        <TextInput :label="'Email'" v-model="email" :isValid="isEmail" />
+        <Message
+          v-if="isSubmitted && !Boolean(email)"
+          :color="'red'"
+          :text="'Please enter your email address.'"
+          :icon="['far', 'times-circle']"
+        />
+        <TextInput
+          :label="'Password'"
+          :inputType="'password'"
+          :isValid="matchPassword"
+          v-model="password"
+        />
+        <Message
+          v-if="isSubmitted && !password"
+          :color="'red'"
+          :text="'Please enter your password.'"
+          :icon="['far', 'times-circle']"
+        />
+        <TextInput
+          :label="'Confirm password'"
+          :inputType="'password'"
+          :isValid="matchPassword"
+          v-model="confirmPassword"
+        />
+        <Message
+          v-if="isSubmitted && !matchPassword"
+          :color="'red'"
+          :text="'Please match your passwords.'"
+          :icon="['far', 'times-circle']"
+        />
+        <div style="text-align: center">
+          <button @click="handleSubmit">Submit</button>
+        </div>
+        <Message v-if="isSuccess" :color="'green'" :text="'User has been created successfully'" />
+        <Message v-if="error" :color="'red'" :text="error.message" />
+      </template>
+    </Dialog>
+  </div>
 </template>
 
 <script>
