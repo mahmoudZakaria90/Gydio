@@ -33,7 +33,7 @@
             type="text"
             v-model="database.externalLink"
             :disabled="storage.blob"
-            @change="validateURL"
+            @change="validateExternalURL"
           />
           <font-awesome-icon
             v-if="database.isValid"
@@ -232,15 +232,7 @@ export default {
         2000
       );
     },
-    cancelUpload() {},
-    resetState(state, options, timeout) {
-      options.forEach(option => {
-        setTimeout(() => {
-          this[state][option.key] = option.value;
-        }, timeout);
-      });
-    },
-    validateURL() {
+    validateExternalURL() {
       if (!this.database.pattern.test(this.database.externalLink)) {
         if (!this.database.externalLink) {
           this.database.isError = false;
@@ -252,7 +244,15 @@ export default {
       }
       this.database.isError = false;
       this.database.isValid = true;
-    }
+    },
+    resetState(state, options, timeout) {
+      options.forEach(option => {
+        setTimeout(() => {
+          this[state][option.key] = option.value;
+        }, timeout);
+      });
+    },
+    cancelUpload() {}
   },
   updated() {
     this.cancelUpload();
