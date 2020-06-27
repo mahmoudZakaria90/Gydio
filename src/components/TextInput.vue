@@ -1,7 +1,7 @@
 <template>
   <label>
     <Message
-      v-if="isRequired && !Boolean(injectedVal)"
+      v-if="isSubmitted && !Boolean(injectedVal)"
       :text="'This field is required!'"
       :color="'red'"
     />
@@ -23,10 +23,6 @@ export default {
       type: String,
       required: true
     },
-    isRequired: {
-      type: Boolean,
-      required: false
-    },
     inputType: {
       type: String,
       required: false
@@ -35,13 +31,21 @@ export default {
       type: String,
       required: true
     },
+    isRequired: {
+      type: Boolean,
+      required: false
+    },
+    isSubmitted: {
+      type: Boolean,
+      required: false
+    },
     isValid: {
       type: Boolean,
       required: true
     },
     hasError: {
       type: Boolean,
-      required: true
+      required: false
     },
     errorMsg: {
       type: String,

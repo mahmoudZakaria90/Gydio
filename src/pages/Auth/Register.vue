@@ -9,7 +9,8 @@
         <form @submit="handleSubmit">
           <TextInput
             :label="'Email'"
-            :isRequired="isSubmitted"
+            :isRequired="true"
+            :isSubmitted="isSubmitted"
             :isValid="isEmail"
             :hasError="email.hasError"
             :errorMsg="email.errorMsg"
@@ -18,32 +19,27 @@
           <TextInput
             :label="'Password'"
             :inputType="'password'"
+            :isRequired="true"
+            :isSubmitted="isSubmitted"
             :isValid="matchPassword"
-            v-model="password"
+            :hasError="password.hasError"
+            :errorMsg="password.errorMsg"
+            v-model="password.value"
           />
-          <Message
-            v-if="isSubmitted && !password"
-            :color="'red'"
-            :text="'Please enter your password.'"
-            :icon="['far', 'times-circle']"
-          />
+
           <TextInput
             :label="'Confirm password'"
             :inputType="'password'"
+            :isRequired="true"
+            :isSubmitted="isSubmitted"
             :isValid="matchPassword"
-            v-model="confirmPassword"
-          />
-          <Message
-            v-if="isSubmitted && !matchPassword"
-            :color="'red'"
-            :text="'Please match your passwords.'"
-            :icon="['far', 'times-circle']"
+            v-model="password.confirmPassword.value"
           />
           <div style="text-align: center">
             <button type="submit">Submit</button>
           </div>
           <Message v-if="isSuccess" :color="'green'" :text="'User has been created successfully'" />
-          <Message v-if="hasError" :color="'red'" :text="hasError.message" />
+          <Message v-if="formHasError" :color="'red'" :text="hasError.message" />
         </form>
       </template>
     </Dialog>
@@ -72,11 +68,17 @@ export default {
         hasError: false,
         errorMsg: ""
       },
-      password: "",
-      confirmPassword: "",
+      password: {
+        value: "",
+        hasError: false,
+        errorMsg: "",
+        confirmPassword: {
+          value: ""
+        }
+      },
       isSubmitted: null,
       isSuccess: null,
-      hasError: ""
+      formHasError: ""
     };
   },
   computed: {
@@ -86,9 +88,9 @@ export default {
     },
     matchPassword() {
       return (
-        Boolean(this.password) &&
-        Boolean(this.confirmPassword) &&
-        this.password === this.confirmPassword
+        Boolean(this.password.value) &&
+        Boolean(this.password.confirmPassword.value) &&
+        this.password.value === this.password.confirmPassword.value
       );
     }
   },
@@ -102,6 +104,19 @@ export default {
         this.email.hasError = false;
         this.email.errorMsg = "";
       }
+
+      if (
+        this.password.value &&
+        this.password.confirmPassword.value &&
+        !this.matchPassword
+      ) {
+        this.password.hasError = true;
+        this.password.errorMsg = "Please match the 2 password inputs.";
+      } else {
+        this.password.hasError = false;
+        this.password.errorMsg = "";
+      }
+
       if (this.isEmail && this.matchPassword) {
         try {
           await firebase
@@ -111,10 +126,10 @@ export default {
           setTimeout(() => {
             this.$router.push("/");
           }, 3000);
-          this.hasError = false;
+          this.formHasError = false;
         } catch (error) {
           this.isSuccess = false;
-          this.hasError = error;
+          this.formHasError = error;
         }
       }
     }
