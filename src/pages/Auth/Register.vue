@@ -39,7 +39,7 @@
             <button type="submit">Submit</button>
           </div>
           <Message v-if="isSuccess" :color="'green'" :text="'User has been created successfully'" />
-          <Message v-if="formHasError" :color="'red'" :text="hasError.message" />
+          <Message v-if="formHasError" :color="'red'" :text="formHasError.message" />
         </form>
       </template>
     </Dialog>
@@ -121,7 +121,10 @@ export default {
         try {
           await firebase
             .auth()
-            .createUserWithEmailAndPassword(this.email.value, this.password);
+            .createUserWithEmailAndPassword(
+              this.email.value,
+              this.password.value
+            );
           this.isSuccess = true;
           setTimeout(() => {
             this.$router.push("/");
