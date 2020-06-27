@@ -8,27 +8,27 @@
 </template>
 
 <script>
-import placeholder from '../../assets/images/Placeholder.svg';
+import placeholder from "../../assets/images/Placeholder.svg";
 export default {
+  name: "Track",
   props: {
     name: String,
     img: String,
     callback: Function
   },
-  data(){
-      return {
-          placeholder
-      }
+  data() {
+    return {
+      placeholder
+    };
   }
 };
 </script>
 
 <style scoped lang="sass">
-  .track
-    cursor: pointer
-    &-name
-      overflow: hidden
-      text-overflow: ellipsis
-      margin-top: 10px
-
+.track
+  cursor: pointer
+  &-name
+    overflow: hidden
+    text-overflow: ellipsis
+    margin-top: 10px
 </style>

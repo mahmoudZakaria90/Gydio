@@ -11,6 +11,7 @@
 
 <script>
 export default {
+  name: "ProgressState",
   props: {
     progressState: String,
     isSuccess: Boolean,
@@ -20,6 +21,6 @@ export default {
 </script>
 
 <style scoped lang="sass">
-  .isCancelled
-    color: red
+.isCancelled
+  color: red
 </style>

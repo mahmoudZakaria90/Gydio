@@ -13,6 +13,7 @@
 
 <script>
 export default {
+  name: "Wrapper",
   props: {
     basis: String,
     row: Boolean,

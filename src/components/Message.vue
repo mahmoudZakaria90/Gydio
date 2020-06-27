@@ -7,6 +7,7 @@
 
 <script>
 export default {
+  name: "Message",
   props: {
     text: String,
     color: String,

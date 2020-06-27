@@ -12,7 +12,9 @@
 </template>
 
 <script>
-export default {};
+export default {
+  name: "Dialog"
+};
 </script>
 
 <style scoped lang="sass">
