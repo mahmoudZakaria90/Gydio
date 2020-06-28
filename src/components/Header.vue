@@ -25,6 +25,8 @@ export default {
 </script>
 
 <style scoped lang="sass">
+.router-link-exact-active
+  text-decoration: underline
 .nav
   display: flex
   &-right

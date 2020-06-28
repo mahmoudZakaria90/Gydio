@@ -8,7 +8,10 @@
     <div class="uploader container">
       <div class="intro">
         <h1>Gydio</h1>
-        <p>Your favorite place for Music, themes and soundtracks of Gaming.</p>
+        <p>
+          Your favorite place for
+          <strong>Gaming</strong> related Music, Themes and Soundtracks.
+        </p>
       </div>
       <h2 class="uploader-title">Upload your fav track.</h2>
       <div class="uploader-placeholder">

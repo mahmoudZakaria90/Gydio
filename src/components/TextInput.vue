@@ -12,7 +12,7 @@
       :class="{hasError: (isSubmitted && !isValid) || (isSubmitted && !Boolean(injectedVal)) || hasError}"
       :type="inputType || 'text'"
       :disabled="isDisabled"
-      v-on="{change: handleOnChange ? handleOnChange : () => {}}"
+      @change="handleOnChange"
       v-model="injectedVal"
     />
     <Message v-if="hasError" :color="'red'" :text="errorMsg" :icon="['far', 'times-circle']" />
@@ -38,7 +38,10 @@ export default {
     isDisabled: Boolean,
     hasError: Boolean,
     errorMsg: String,
-    handleOnChange: Function
+    handleOnChange: {
+      type: Function,
+      default: () => {}
+    }
   },
   data() {
     return {
