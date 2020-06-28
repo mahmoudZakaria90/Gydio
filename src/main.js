@@ -9,10 +9,13 @@ import { faTimesCircle } from '@fortawesome/free-regular-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import "./assets/sass/index.sass";
 
+import Header from "./components/Header";
+
 
 library.add(faPlusCircle, faCheckCircle, faArrowCircleUp, faTimesCircle);
 
 Vue.component('font-awesome-icon', FontAwesomeIcon);
+Vue.component('Header', Header);
 
 
 // Your web app's Firebase configuration

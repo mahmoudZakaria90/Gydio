@@ -91,7 +91,6 @@ import firebase from "firebase/app";
 import "firebase/database";
 
 import ProgressState from "../components/ProgressState";
-import Header from "../components/Header";
 import TextInput from "../components/TextInput";
 
 import { eventBus } from "../utils";
@@ -100,7 +99,6 @@ export default {
   name: "Uploader",
   components: {
     ProgressState,
-    Header,
     TextInput
   },
   data() {

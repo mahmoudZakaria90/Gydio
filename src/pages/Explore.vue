@@ -1,10 +1,6 @@
 <template>
   <div>
-    <Header>
-      <template v-slot:nav-left>
-        <router-link to="/">Back</router-link>
-      </template>
-    </Header>
+    <Header />
     <div class="container">
       <p v-if="!tracks && !externalTracks">{{loadingState}}</p>
       <h1 v-if="tracks">Explore</h1>
@@ -26,8 +22,6 @@
 import firebase from "firebase/app";
 import "firebase/database";
 
-import Header from "../components/Header";
-
 import TrackWrapper from "../components/Track/Wrapper";
 import Track from "../components/Track/Track";
 import ExternalTrack from "../components/Track/ExternalTrack";
@@ -35,7 +29,6 @@ import ExternalTrack from "../components/Track/ExternalTrack";
 export default {
   name: "Explore",
   components: {
-    Header,
     Track,
     TrackWrapper,
     ExternalTrack

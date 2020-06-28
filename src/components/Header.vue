@@ -2,10 +2,12 @@
   <div>
     <header>
       <nav class="nav">
-        <slot name="nav-left"></slot>
+        <slot name="nav-left">
+          <router-link to="/">Back</router-link>
+        </slot>
         <ul class="nav-right">
           <li>
-            <a href>Login</a>
+            <router-link to="/login">Login</router-link>
           </li>
           <li>
             <router-link to="/register">Register</router-link>

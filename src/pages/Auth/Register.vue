@@ -1,8 +1,6 @@
 <template>
   <div>
-    <Header>
-      <router-link to="/">Back</router-link>
-    </Header>
+    <Header />
     <Dialog>
       <template v-slot:dialog-title>Register</template>
       <template v-slot:dialog-body>
@@ -26,7 +24,6 @@
             :errorMsg="password.errorMsg"
             v-model="password.value"
           />
-
           <TextInput
             :label="'Confirm password'"
             :inputType="'password'"
