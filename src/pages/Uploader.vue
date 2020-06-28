@@ -28,19 +28,16 @@
       </div>
       <div class="external-link">
         <div class="external-link-inner">
-          <label for>Copy/paste an external link e.g. youtube</label>
-          <input
-            type="text"
+          <TextInput
+            :label="'Copy/paste an external link e.g. youtube'"
+            :isDisabled="Boolean(storage.blob)"
+            :isValid="database.isValid"
+            :hasError="database.isError"
+            :errorMsg="database.errorMsg"
+            :handleOnChange="validateExternalURL"
+            ref="externalLinkInput"
             v-model="database.externalLink"
-            :disabled="storage.blob"
-            @change="validateExternalURL"
           />
-          <font-awesome-icon
-            v-if="database.isValid"
-            :icon="['fas', 'check-circle']"
-            :style="{ color: 'lightgreen' }"
-          />
-          <p class="error" v-if="database.isError">{{ database.errorMsg }}</p>
         </div>
       </div>
       <div v-if="storage.isProgress" class="progress-outer">
@@ -95,12 +92,16 @@ import "firebase/database";
 
 import ProgressState from "../components/ProgressState";
 import Header from "../components/Header";
+import TextInput from "../components/TextInput";
+
+import { eventBus } from "../utils";
 
 export default {
   name: "Uploader",
   components: {
     ProgressState,
-    Header
+    Header,
+    TextInput
   },
   data() {
     return {
@@ -122,7 +123,7 @@ export default {
         isError: false,
         isValid: false,
         errorMsg: "You need to input a vaild youtube video URL.",
-        pattern: /https:\/\/www.youtube.com\/watch\?v=\w+/g
+        pattern: /^https:\/\/www.youtube.com\/watch\?v=\w+/g
       }
     };
   },
@@ -229,7 +230,8 @@ export default {
           { key: "isSuccess", value: false },
           { key: "externalLink", value: "" }
         ],
-        2000
+        2000,
+        () => eventBus.$emit("resetInput", this.database.externalLink)
       );
     },
     validateExternalURL() {
@@ -245,12 +247,13 @@ export default {
       this.database.isError = false;
       this.database.isValid = true;
     },
-    resetState(state, options, timeout) {
-      options.forEach(option => {
-        setTimeout(() => {
+    resetState(state, options, timeout, cb) {
+      setTimeout(() => {
+        options.forEach(option => {
           this[state][option.key] = option.value;
-        }, timeout);
-      });
+        });
+        if (cb) cb();
+      }, timeout);
     },
     cancelUpload() {}
   },

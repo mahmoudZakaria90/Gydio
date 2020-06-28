@@ -11,6 +11,8 @@
       class="text-input"
       :class="{hasError: (isSubmitted && !isValid) || (isSubmitted && !Boolean(injectedVal)) || hasError}"
       :type="inputType || 'text'"
+      :disabled="isDisabled"
+      @change="handleOnChange"
       v-model="injectedVal"
     />
     <Message v-if="hasError" :color="'red'" :text="errorMsg" :icon="['far', 'times-circle']" />
@@ -19,49 +21,32 @@
 
 <script>
 import Message from "./Message";
+import { eventBus } from "../utils";
+
 export default {
   name: "TextInput",
   components: {
     Message
   },
   props: {
-    label: {
-      type: String,
-      required: true
-    },
-    inputType: {
-      type: String,
-      required: false
-    },
-    value: {
-      type: String,
-      required: true
-    },
-    isRequired: {
-      type: Boolean,
-      required: false
-    },
-    isSubmitted: {
-      type: Boolean,
-      required: false
-    },
-    isValid: {
-      type: Boolean,
-      required: true
-    },
-    hasError: {
-      type: Boolean,
-      required: false
-    },
-    errorMsg: {
-      type: String,
-      required: false
-    }
+    label: String,
+    inputType: String,
+    value: String,
+    isRequired: Boolean,
+    isSubmitted: Boolean,
+    isValid: Boolean,
+    isDisabled: Boolean,
+    hasError: Boolean,
+    errorMsg: String,
+    handleOnChange: Function
   },
   data() {
     return {
       injectedVal: this.value
     };
+  },
+  mounted() {
+    eventBus.$on("resetInput", () => (this.injectedVal = ""));
   },
   watch: {
     injectedVal() {
