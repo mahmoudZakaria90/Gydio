@@ -1,11 +1,15 @@
 <template>
-  <router-view></router-view>
+  <div>
+    <Header v-if="$route.name !== 'Uploader'" />
+    <router-view></router-view>
+  </div>
 </template>
 
 <script>
-export default {};
+export default {
+  name: "App"
+};
 </script>
 
 <style lang="sass">
-
 </style>

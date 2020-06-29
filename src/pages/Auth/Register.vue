@@ -1,46 +1,43 @@
 <template>
-  <div>
-    <Header />
-    <Dialog>
-      <template v-slot:dialog-title>Register</template>
-      <template v-slot:dialog-body>
-        <form @submit="handleSubmit">
-          <TextInput
-            :label="'Email'"
-            :isRequired="true"
-            :isSubmitted="isSubmitted"
-            :isValid="isEmail"
-            :hasError="email.hasError"
-            :errorMsg="email.errorMsg"
-            v-model="email.value"
-          />
-          <TextInput
-            :label="'Password'"
-            :inputType="'password'"
-            :isRequired="true"
-            :isSubmitted="isSubmitted"
-            :isValid="matchPassword"
-            :hasError="password.hasError"
-            :errorMsg="password.errorMsg"
-            v-model="password.value"
-          />
-          <TextInput
-            :label="'Confirm password'"
-            :inputType="'password'"
-            :isRequired="true"
-            :isSubmitted="isSubmitted"
-            :isValid="matchPassword"
-            v-model="password.confirmPassword.value"
-          />
-          <div style="text-align: center">
-            <button type="submit">Submit</button>
-          </div>
-          <Message v-if="isSuccess" :color="'green'" :text="'User has been created successfully'" />
-          <Message v-if="formHasError" :color="'red'" :text="formHasError.message" />
-        </form>
-      </template>
-    </Dialog>
-  </div>
+  <Dialog>
+    <template v-slot:dialog-title>Register</template>
+    <template v-slot:dialog-body>
+      <form @submit="handleSubmit">
+        <TextInput
+          :label="'Email'"
+          :isRequired="true"
+          :isSubmitted="isSubmitted"
+          :isValid="isEmail"
+          :hasError="email.hasError"
+          :errorMsg="email.errorMsg"
+          v-model="email.value"
+        />
+        <TextInput
+          :label="'Password'"
+          :inputType="'password'"
+          :isRequired="true"
+          :isSubmitted="isSubmitted"
+          :isValid="matchPassword"
+          :hasError="password.hasError"
+          :errorMsg="password.errorMsg"
+          v-model="password.value"
+        />
+        <TextInput
+          :label="'Confirm password'"
+          :inputType="'password'"
+          :isRequired="true"
+          :isSubmitted="isSubmitted"
+          :isValid="matchPassword"
+          v-model="password.confirmPassword.value"
+        />
+        <div style="text-align: center">
+          <button type="submit">Submit</button>
+        </div>
+        <Message v-if="isSuccess" :color="'green'" :text="'User has been created successfully'" />
+        <Message v-if="formHasError" :color="'red'" :text="formHasError.message" />
+      </form>
+    </template>
+  </Dialog>
 </template>
 
 <script>
@@ -75,7 +72,7 @@ export default {
       },
       isSubmitted: null,
       isSuccess: null,
-      formHasError: ""
+      formHasError: null
     };
   },
   computed: {
@@ -126,7 +123,7 @@ export default {
           setTimeout(() => {
             this.$router.push("/");
           }, 3000);
-          this.formHasError = false;
+          this.formHasError = null;
         } catch (error) {
           this.isSuccess = false;
           this.formHasError = error;

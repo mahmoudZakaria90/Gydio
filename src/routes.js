@@ -9,10 +9,10 @@ import Login from './pages/Auth/Login';
 Vue.use(VueRouter);
 
 const routes = [
-    { path: '/', component: Uploader },
-    { path: '/explore', component: Explore },
-    { path: '/register', component: Register },
-    { path: '/login', component: Login }
+    { path: '/', component: Uploader, name: 'Uploader' },
+    { path: '/explore', component: Explore, name: 'Explore' },
+    { path: '/register', component: Register, name: 'Register' },
+    { path: '/login', component: Login, name: 'Login' }
 
 ]
 

@@ -1,6 +1,5 @@
 <template>
   <div>
-    <Header />
     <div class="container">
       <p v-if="!tracks && !externalTracks">{{loadingState}}</p>
       <h1 v-if="tracks">Explore</h1>

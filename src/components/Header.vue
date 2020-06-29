@@ -5,7 +5,7 @@
         <slot name="nav-left">
           <router-link to="/">Back</router-link>
         </slot>
-        <ul class="nav-right">
+        <ul v-if="!isAuthenticated" class="nav-right">
           <li>
             <router-link to="/login">Login</router-link>
           </li>
@@ -13,14 +13,28 @@
             <router-link to="/register">Register</router-link>
           </li>
         </ul>
+        <p class="user" v-if="isAuthenticated">Welcome back, {{user}}</p>
       </nav>
     </header>
   </div>
 </template>
 
 <script>
+import { eventBus } from "../utils";
 export default {
-  name: "Header"
+  name: "Header",
+  data() {
+    return {
+      user: null,
+      isAuthenticated: false
+    };
+  },
+  mounted() {
+    eventBus.$on("user_authenticated", ({ isAuthenticated, user }) => {
+      this.user = user;
+      this.isAuthenticated = isAuthenticated;
+    });
+  }
 };
 </script>
 
@@ -34,4 +48,6 @@ export default {
     & > li
       display: inline-block
       margin: 0 20px
+.user
+  margin-left: auto
 </style>
