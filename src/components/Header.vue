@@ -50,4 +50,5 @@ export default {
       margin: 0 20px
 .user
   margin-left: auto
+  margin-bottom: 0
 </style>
