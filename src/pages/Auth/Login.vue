@@ -63,6 +63,7 @@ export default {
         } catch (error) {
           this.isSuccess = false;
           this.formHasError = error;
+          eventBus.$emit("resetInput", "");
           alert("Fail");
         }
       }
