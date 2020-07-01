@@ -2,7 +2,7 @@
   <Dialog>
     <template v-slot:dialog-title>Register</template>
     <template v-slot:dialog-body>
-      <form @submit="handleSubmit">
+      <form @submit.prevent="handleSubmit">
         <TextInput
           :label="'Email'"
           :isRequired="true"
