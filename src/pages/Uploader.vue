@@ -195,7 +195,8 @@ export default {
             [
               { key: "blob", value: null },
               { key: "isProgress", value: false },
-              { key: "fileName", value: null }
+              { key: "fileName", value: null },
+              { key: "isSuccess", value: false }
             ],
             2000
           );
