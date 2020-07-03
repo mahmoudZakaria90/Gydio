@@ -86,16 +86,14 @@ export default {
 
       if (this.email.value && this.password.value) {
         try {
-          const { user } = await firebase
+          await firebase
             .auth()
             .signInWithEmailAndPassword(this.email.value, this.password.value);
-          const { email } = user;
           this.isSuccess = true;
           this.formHasError = null;
-          eventBus.$emit("user_authenticated", {
-            isAuthenticated: this.isSuccess,
-            user: email
-          });
+          setTimeout(() => {
+            this.$router.push("/");
+          }, 3000);
         } catch (error) {
           this.isSuccess = false;
           this.formHasError = error;

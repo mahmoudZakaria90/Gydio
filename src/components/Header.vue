@@ -5,7 +5,7 @@
         <slot name="nav-left">
           <router-link to="/">Back</router-link>
         </slot>
-        <ul v-if="!isAuthenticated" class="nav-right">
+        <ul v-if="!user" class="nav-right">
           <li>
             <router-link to="/login">Login</router-link>
           </li>
@@ -13,14 +13,21 @@
             <router-link to="/register">Register</router-link>
           </li>
         </ul>
-        <p class="user" v-if="isAuthenticated">Welcome back, {{user}}</p>
+        <ul class="nav-right" v-else>
+          <li>Welcome back, {{user.email}}</li>
+          <li>
+            <a @click.prevent="signOut">Logout</a>
+          </li>
+        </ul>
       </nav>
     </header>
   </div>
 </template>
 
 <script>
-import { eventBus } from "../utils/bus";
+import firebase from "firebase/app";
+import "firebase/auth";
+
 export default {
   name: "Header",
   data() {
@@ -29,10 +36,18 @@ export default {
       isAuthenticated: false
     };
   },
+  methods: {
+    signOut() {
+      firebase.auth().signOut();
+    }
+  },
   mounted() {
-    eventBus.$on("user_authenticated", ({ isAuthenticated, user }) => {
-      this.user = user;
-      this.isAuthenticated = isAuthenticated;
+    firebase.auth().onAuthStateChanged(user => {
+      if (user) {
+        this.user = user;
+        return;
+      }
+      this.user = null;
     });
   }
 };
