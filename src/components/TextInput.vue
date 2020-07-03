@@ -21,7 +21,7 @@
 
 <script>
 import Message from "./Message";
-import { eventBus } from "../utils";
+import { eventBus } from "../utils/bus";
 
 export default {
   name: "TextInput",

@@ -20,7 +20,7 @@
 </template>
 
 <script>
-import { eventBus } from "../utils";
+import { eventBus } from "../utils/bus";
 export default {
   name: "Header",
   data() {

@@ -96,7 +96,7 @@ import "firebase/database";
 import ProgressState from "../components/ProgressState";
 import TextInput from "../components/TextInput";
 
-import { eventBus } from "../utils";
+import { eventBus } from "../utils/bus";
 
 export default {
   name: "Uploader",
