@@ -88,7 +88,7 @@ export default {
         try {
           const { user } = await firebase
             .auth()
-            .signInWithEmailAndPassword(this.email, this.password);
+            .signInWithEmailAndPassword(this.email.value, this.password.value);
           const { email } = user;
           this.isSuccess = true;
           this.formHasError = null;
