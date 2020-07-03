@@ -8,6 +8,7 @@
     <span class="text-input-label">{{ label }} {{isRequired ? '*' : ''}}</span>
     <font-awesome-icon v-if="isValid" :icon=" ['fas', 'check-circle']"></font-awesome-icon>
     <input
+      autocomplete="off"
       class="text-input"
       :class="{hasError: (isSubmitted && !isValid) || (isSubmitted && !Boolean(injectedVal)) || hasError}"
       :type="inputType || 'text'"
