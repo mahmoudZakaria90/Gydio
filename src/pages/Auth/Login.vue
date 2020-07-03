@@ -3,12 +3,24 @@
     <template v-slot:dialog-title>Login</template>
     <template v-slot:dialog-body>
       <form @submit.prevent="handleSubmit">
-        <TextInput :label="'Email'" :isRequired="true" v-model="email" />
+        <TextInput
+          :label="'Email'"
+          :isRequired="true"
+          :isSubmitted="isSubmitted"
+          :isValid="isEmail"
+          :hasError="email.hasError"
+          :errorMsg="email.errorMsg"
+          v-model="email.value"
+        />
         <TextInput
           :label="'Password'"
           :inputType="'password'"
           :isRequired="true"
-          v-model="password"
+          :isSubmitted="isSubmitted"
+          :isValid="Boolean(password.value)"
+          :hasError="password.hasError"
+          :errorMsg="password.errorMsg"
+          v-model="password.value"
         />
         <div style="text-align: center">
           <button type="submit">Submit</button>
@@ -39,16 +51,40 @@ export default {
   },
   data() {
     return {
-      email: "",
-      password: "",
+      email: {
+        value: "",
+        hasError: false,
+        errorMsg: ""
+      },
+      password: {
+        value: "",
+        hasError: false,
+        errorMsg: ""
+      },
       isSubmitted: null,
       isSuccess: null,
       formHasError: null
     };
   },
+  computed: {
+    isEmail() {
+      const pattern = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+      return pattern.test(this.email.value);
+    }
+  },
   methods: {
     async handleSubmit() {
-      if (this.email && this.password) {
+      this.isSubmitted = true;
+
+      if (this.email.value && !this.isEmail) {
+        this.email.hasError = true;
+        this.email.errorMsg = "Enter a valid email address.";
+      } else {
+        this.email.hasError = false;
+        this.email.errorMsg = "";
+      }
+
+      if (this.email.value && this.password.value) {
         try {
           const { user } = await firebase
             .auth()
