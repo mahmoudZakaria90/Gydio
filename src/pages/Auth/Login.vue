@@ -99,6 +99,7 @@ export default {
         } catch (error) {
           this.isSuccess = false;
           this.formHasError = error;
+          this.isSubmitted = false;
           eventBus.$emit("resetInput", "");
           alert("Fail");
         }
