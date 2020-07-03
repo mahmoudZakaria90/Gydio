@@ -44,10 +44,11 @@
         </div>
       </div>
       <div v-if="storage.isProgress" class="progress-outer">
-        <ProgressState
-          :progressState="storage.progressState"
-          :isSuccess="storage.isSuccess"
-          :isCancelled="storage.isCancelled"
+        <Message
+          :text="storage.progressState"
+          :icon="storage.isSuccess ? ['fas', 'check-circle'] : null"
+          :iconStyle="{color: 'lightgreen'}"
+          :color="storage.isCancelled ? 'red' : null"
         />
         <div class="progress">
           <span>{{ storage.progress }}%</span>
@@ -79,9 +80,10 @@
           Upload
           <font-awesome-icon :icon="['fas', 'arrow-circle-up']" />
         </button>
-        <ProgressState
-          :progressState="database.progressState"
-          :isSuccess="database.isSuccess"
+        <Message
+          :text="database.progressState"
+          :icon="database.isSuccess ? ['fas', 'check-circle'] : null"
+          :iconStyle="{color: 'lightgreen'}"
           v-if="database.isSuccess"
         />
       </div>
@@ -93,7 +95,7 @@
 import firebase from "firebase/app";
 import "firebase/database";
 
-import ProgressState from "../components/ProgressState";
+import Message from "../components/Message";
 import TextInput from "../components/TextInput";
 
 import { eventBus } from "../utils/bus";
@@ -101,7 +103,7 @@ import { eventBus } from "../utils/bus";
 export default {
   name: "Uploader",
   components: {
-    ProgressState,
+    Message,
     TextInput
   },
   data() {

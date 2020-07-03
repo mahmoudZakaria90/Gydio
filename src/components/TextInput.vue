@@ -69,7 +69,6 @@ export default {
   margin-bottom: 20px
   &-label
     font-size: 20px
-    margin-right: 10px
   &.hasError
     border-color: red
 </style>
