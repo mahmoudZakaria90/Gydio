@@ -4,7 +4,13 @@
       <p v-if="!tracks && !externalTracks">{{loadingState}}</p>
       <h1 v-if="tracks">Explore</h1>
       <TrackWrapper :row="true" :basis="'col-4'">
-        <Track v-for="track in tracks" :key="track" :name="track" :callback="changeSelectedTrack" />
+        <Track
+          v-for="track in tracks"
+          :key="track.generation"
+          :name="track.name"
+          :dateUploaded="track.dateUploaded"
+          :callback="changeSelectedTrack"
+        />
       </TrackWrapper>
     </div>
     <div class="container">
@@ -50,7 +56,45 @@ export default {
     const storageRef = firebase.storage().ref("music");
     this.loadingState = "Loading...";
     const { items } = await storageRef.listAll();
-    this.tracks = items && items.map(item => item.name);
+
+    this.tracks =
+      items &&
+      (await Promise.all(
+        items.map(async ({ name }) => {
+          const childRef = storageRef.child(name);
+          const { timeCreated, generation } = await childRef.getMetadata();
+          const formattedDateTime = timeCreated.split("T");
+          const [date, time] = formattedDateTime;
+          const finalTime = time.split(".")[0];
+
+          const months = [
+            "January",
+            "February",
+            "March",
+            "April",
+            "May",
+            "June",
+            "July",
+            "August",
+            "September",
+            "October",
+            "November",
+            "December"
+          ];
+
+          const formattedDate = new Date(date);
+          const getFullYear = formattedDate.getFullYear();
+          const getDay = formattedDate.getDay();
+          const getMonth = months[formattedDate.getMonth()];
+          const finalDateTime = `${getMonth} ${getDay}, ${getFullYear}, ${finalTime}.`;
+
+          return {
+            name,
+            dateUploaded: finalDateTime,
+            generation
+          };
+        })
+      ));
 
     //External videos
     const databaseFetch = await fetch(

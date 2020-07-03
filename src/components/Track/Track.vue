@@ -4,6 +4,10 @@
       <img :src="img || placeholder" alt />
     </div>
     <div class="track-name" :title="name">{{name}}</div>
+    <small>
+      <strong>Uploaded:</strong>
+      {{dateUploaded}}
+    </small>
   </div>
 </template>
 
@@ -13,6 +17,7 @@ export default {
   name: "Track",
   props: {
     name: String,
+    dateUploaded: String,
     img: String,
     callback: Function
   },
@@ -28,6 +33,7 @@ export default {
 .track
   cursor: pointer
   &-name
+    white-space: nowrap
     overflow: hidden
     text-overflow: ellipsis
     margin-top: 10px
