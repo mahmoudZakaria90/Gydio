@@ -1,8 +1,8 @@
 <template>
   <div>
     <div class="container">
-      <p v-if="!tracks && !externalTracks">{{loadingState}}</p>
       <h1 v-if="tracks">Explore</h1>
+      <p v-if="!tracks.length && !externalTracks">{{loadingState}}</p>
       <TrackWrapper :row="true" :basis="'col-4'">
         <Track
           v-for="track in tracks"
@@ -109,7 +109,7 @@ export default {
           videoURL: trimmedURL
         };
       });
-    if (!this.tracks.length && !this.externalTracks.length) {
+    if (!this.tracks.length && !this.externalTracks) {
       this.loadingState = "No files to explore!";
     }
   }
