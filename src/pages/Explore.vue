@@ -39,7 +39,7 @@ export default {
   },
   data() {
     return {
-      tracks: null,
+      tracks: [],
       selectedTrack: null,
       externalTracks: null,
       loadingState: null
