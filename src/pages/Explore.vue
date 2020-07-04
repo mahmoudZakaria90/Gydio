@@ -25,7 +25,6 @@
 
 <script>
 import firebase from "firebase/app";
-import "firebase/database";
 
 import TrackWrapper from "../components/Track/Wrapper";
 import Track from "../components/Track/Track";

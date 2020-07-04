@@ -34,7 +34,6 @@
 
 <script>
 import firebase from "firebase/app";
-import "firebase/auth";
 
 import { eventBus } from "../../utils/bus";
 import { isEmail } from "../../utils/validation";

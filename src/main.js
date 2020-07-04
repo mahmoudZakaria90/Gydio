@@ -11,6 +11,8 @@ import "./assets/sass/index.sass";
 
 import Header from "./components/Header";
 
+import 'firebase/auth';
+import 'firebase/database';
 
 library.add(faPlusCircle, faCheckCircle, faArrowCircleUp, faTimesCircle);
 

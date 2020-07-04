@@ -93,7 +93,6 @@
 
 <script>
 import firebase from "firebase/app";
-import "firebase/database";
 
 import Message from "../components/Message";
 import TextInput from "../components/TextInput";
