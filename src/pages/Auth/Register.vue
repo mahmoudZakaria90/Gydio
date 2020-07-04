@@ -120,6 +120,8 @@ export default {
               this.password.value
             );
           this.isSuccess = true;
+          const user = firebase.auth().currentUser;
+          await user.sendEmailVerification();
           setTimeout(() => {
             this.$router.push("/");
           }, 3000);
