@@ -83,7 +83,7 @@ export default {
 
           const formattedDate = new Date(date);
           const getFullYear = formattedDate.getFullYear();
-          const getDay = formattedDate.getDay();
+          const getDay = formattedDate.getDate();
           const getMonth = months[formattedDate.getMonth()];
           const finalDateTime = `${getMonth} ${getDay}, ${getFullYear}, ${finalTime}.`;
 
