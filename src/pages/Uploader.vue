@@ -125,7 +125,7 @@ export default {
         isError: false,
         isValid: false,
         errorMsg: "You need to input a vaild youtube video URL.",
-        pattern: /^https:\/\/www.youtube.com\/watch\?v=\w+/g
+        pattern: /^https:\/\/www.youtube.com\/watch\?v=\w+(-)?\w+/g
       }
     };
   },
