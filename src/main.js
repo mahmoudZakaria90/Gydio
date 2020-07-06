@@ -2,7 +2,7 @@ import Vue from 'vue';
 import App from './App.vue';
 import router from './routes';
 import firebase from "firebase/app";
-import "firebase/storage";
+
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { faPlusCircle, faCheckCircle, faArrowCircleUp } from '@fortawesome/free-solid-svg-icons';
 import { faTimesCircle } from '@fortawesome/free-regular-svg-icons';
@@ -11,6 +11,7 @@ import "./assets/sass/index.sass";
 
 import Header from "./components/Header";
 
+import "firebase/storage";
 import 'firebase/auth';
 import 'firebase/database';
 
