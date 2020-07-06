@@ -45,21 +45,6 @@ export default {
       loadingState: null
     };
   },
-  computed: {
-    sortedTracks() {
-      return this.tracks.slice(0).sort((a, b) => {
-        const aObj = a;
-        const bObj = b;
-        const { originalDate: aOriginalDate } = aObj;
-        const { originalDate: bOriginalDate } = bObj;
-
-        return (
-          new Date(bOriginalDate).getTime() - new Date(aOriginalDate).getTime()
-        );
-      });
-    }
-  },
-
   methods: {
     async changeSelectedTrack(newTrack) {
       const storageRef = firebase.storage().ref("music/" + newTrack);
@@ -113,6 +98,17 @@ export default {
         .sort((a, b) => b.uploaded - a.uploaded);
     if (!this.tracks.length && !this.externalTracks) {
       this.loadingState = "No files to explore!";
+    }
+  },
+  computed: {
+    sortedTracks() {
+      return this.tracks.slice(0).sort((a, b) => {
+        const { originalDate: aOriginalDate } = a;
+        const { originalDate: bOriginalDate } = b;
+        return (
+          new Date(bOriginalDate).getTime() - new Date(aOriginalDate).getTime()
+        );
+      });
     }
   }
 };
