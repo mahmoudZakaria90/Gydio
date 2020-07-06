@@ -12,7 +12,7 @@
 </template>
 
 <script>
-import placeholder from "../../assets/images/Placeholder.svg";
+import placeholder from "../../assets/images/play-button.png";
 export default {
   name: "Track",
   props: {
