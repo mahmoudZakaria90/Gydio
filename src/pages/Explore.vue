@@ -77,30 +77,13 @@ export default {
         items.map(async ({ name }) => {
           const childRef = storageRef.child(name);
           const { timeCreated, generation } = await childRef.getMetadata();
-          const formattedDateTime = timeCreated.split("T");
-          const [date, time] = formattedDateTime;
-          const finalTime = time.split(".")[0];
 
-          const months = [
-            "January",
-            "February",
-            "March",
-            "April",
-            "May",
-            "June",
-            "July",
-            "August",
-            "September",
-            "October",
-            "November",
-            "December"
-          ];
+          const formattedDate = new Date(timeCreated).toDateString();
+          const formattedTime = new Date(timeCreated)
+            .toTimeString()
+            .split(" GMT")[0];
 
-          const formattedDate = new Date(date);
-          const getFullYear = formattedDate.getFullYear();
-          const getDay = formattedDate.getDate();
-          const getMonth = months[formattedDate.getMonth()];
-          const finalDateTime = `${getMonth} ${getDay}, ${getFullYear}, ${finalTime}.`;
+          const finalDateTime = `${formattedDate}, ${formattedTime}.`;
 
           return {
             name,
