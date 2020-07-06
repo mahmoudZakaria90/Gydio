@@ -219,7 +219,8 @@ export default {
         .database()
         .ref("music/" + videoIdSplitted)
         .set({
-          videoURL
+          videoURL,
+          uploaded: Date.now()
         });
       this.database.progressState = `Video url uploaded successfully!`;
       this.database.isSuccess = true;

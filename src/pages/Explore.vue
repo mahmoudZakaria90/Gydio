@@ -5,7 +5,7 @@
       <p v-if="!tracks.length && !externalTracks">{{loadingState}}</p>
       <TrackWrapper :row="true" :basis="'col-4'">
         <Track
-          v-for="track in tracks"
+          v-for="track in sortedTracks"
           :key="track.generation"
           :name="track.name"
           :dateUploaded="track.dateUploaded"
@@ -45,6 +45,21 @@ export default {
       loadingState: null
     };
   },
+  computed: {
+    sortedTracks() {
+      return this.tracks.slice(0).sort((a, b) => {
+        const aObj = a;
+        const bObj = b;
+        const { originalDate: aOriginalDate } = aObj;
+        const { originalDate: bOriginalDate } = bObj;
+
+        return (
+          new Date(bOriginalDate).getTime() - new Date(aOriginalDate).getTime()
+        );
+      });
+    }
+  },
+
   methods: {
     async changeSelectedTrack(newTrack) {
       const storageRef = firebase.storage().ref("music/" + newTrack);
@@ -89,6 +104,7 @@ export default {
 
           return {
             name,
+            originalDate: timeCreated,
             dateUploaded: finalDateTime,
             generation
           };
@@ -102,13 +118,16 @@ export default {
     const databaseResult = await databaseFetch.json();
     this.externalTracks =
       databaseResult &&
-      Object.entries(databaseResult).map(([id, { videoURL }]) => {
-        const trimmedURL = videoURL.replace("watch?v=", "embed/");
-        return {
-          id,
-          videoURL: trimmedURL
-        };
-      });
+      Object.entries(databaseResult)
+        .map(([id, { videoURL, uploaded }]) => {
+          const trimmedURL = videoURL.replace("watch?v=", "embed/");
+          return {
+            id,
+            videoURL: trimmedURL,
+            uploaded
+          };
+        })
+        .sort((a, b) => b.uploaded - a.uploaded);
     if (!this.tracks.length && !this.externalTracks) {
       this.loadingState = "No files to explore!";
     }
