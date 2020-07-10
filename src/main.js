@@ -7,7 +7,7 @@ import { library } from '@fortawesome/fontawesome-svg-core';
 import { faPlusCircle, faCheckCircle, faArrowCircleUp } from '@fortawesome/free-solid-svg-icons';
 import { faTimesCircle } from '@fortawesome/free-regular-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
-import "./assets/sass/index.sass";
+import "./assets/sass/general.sass";
 
 import Header from "./components/Header";
 
