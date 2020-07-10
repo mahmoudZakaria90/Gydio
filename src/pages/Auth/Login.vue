@@ -17,7 +17,7 @@
           :inputType="'password'"
           :isRequired="true"
           :isSubmitted="isSubmitted"
-          :isValid="Boolean(password.value)"
+          :isValid="Boolean(password.value) && password.value.length >= 6"
           :hasError="password.hasError"
           :errorMsg="password.errorMsg"
           v-model="password.value"
