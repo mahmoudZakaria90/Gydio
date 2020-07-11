@@ -7,6 +7,7 @@
       <div class="dialog-body">
         <slot name="dialog-body"></slot>
       </div>
+      <slot></slot>
     </div>
   </div>
 </template>

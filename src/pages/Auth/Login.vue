@@ -29,6 +29,9 @@
         <Message v-if="formHasError" :color="'red'" :text="formHasError.message" />
       </form>
     </template>
+    <div class="login-social">
+      <FacebookButton />
+    </div>
   </Dialog>
 </template>
 
@@ -42,10 +45,13 @@ import Dialog from "../../components/Dialog";
 import Message from "../../components/Message";
 import TextInput from "../../components/TextInput";
 
+import FacebookButton from "./FacebookButton";
+
 export default {
   name: "Login",
   components: {
     Dialog,
+    FacebookButton,
     Message,
     TextInput
   },
@@ -106,5 +112,8 @@ export default {
 };
 </script>
 
-<style>
+<style lang="sass" scoped>
+.login
+  &-social
+    margin-top: 50px
 </style>
