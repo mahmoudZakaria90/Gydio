@@ -31,6 +31,7 @@
     </template>
     <div class="login-social">
       <FacebookButton />
+      <GoogleButton />
     </div>
   </Dialog>
 </template>
@@ -46,12 +47,14 @@ import Message from "../../components/Message";
 import TextInput from "../../components/TextInput";
 
 import FacebookButton from "./FacebookButton";
+import GoogleButton from "./GoogleButton";
 
 export default {
   name: "Login",
   components: {
     Dialog,
     FacebookButton,
+    GoogleButton,
     Message,
     TextInput
   },

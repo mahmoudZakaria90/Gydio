@@ -1,6 +1,6 @@
 <template>
   <button
-    :class="iconPosition"
+    :class="[iconPosition, variant]"
     :style="{styleObj, 'background-color': variant}"
     :text="text"
     :disabled="isDisabled"
@@ -32,6 +32,8 @@ export default {
 </script>
 
 <style lang="sass" scoped>
+.danger
+  background-color: #d9372b
 .left
   .svg-inline--fa
     margin-left: 0
