@@ -28,7 +28,10 @@ export default {
       type: String
     },
     isDisabled: Boolean,
-    handleClick: Function
+    handleClick: {
+      type: Function,
+      default: () => {}
+    }
   }
 };
 </script>
