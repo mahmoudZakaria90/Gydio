@@ -33,14 +33,14 @@
         <div class="external-link-inner">
           <TextInput
             :label="'Copy/paste an external link e.g. youtube'"
-            :isDisabled="Boolean(storage.blob)"
+            :isDisabled="storage.blob"
             :isValid="database.isValid"
             :hasError="database.isError"
             :errorMsg="database.errorMsg"
             :handleOnChange="validateExternalURL"
-            ref="externalLinkInput"
             v-model="database.externalLink"
           />
+          <Message :color="'red'" :text="database.uploadErrorMsg" />
         </div>
       </div>
       <div v-if="storage.isProgress" class="progress-outer">
@@ -125,6 +125,7 @@ export default {
         isError: false,
         isValid: false,
         errorMsg: "You need to input a vaild youtube video URL.",
+        uploadErrorMsg: null,
         pattern: /^https:\/\/www.youtube.com\/watch\?v=\w+(-)?\w+/g
       }
     };
@@ -215,13 +216,17 @@ export default {
       const [videoURL] = this.database.externalLink.match(
         this.database.pattern
       );
-      await firebase
-        .database()
-        .ref("music/" + videoIdSplitted)
-        .set({
-          videoURL,
-          uploaded: Date.now()
-        });
+      try {
+        await firebase
+          .database()
+          .ref("music/" + videoIdSplitted)
+          .set({
+            videoURL,
+            uploaded: Date.now()
+          });
+      } catch (error) {
+        this.uploadErrorMsg = error.message;
+      }
       this.database.progressState = `Video url uploaded successfully!`;
       this.database.isSuccess = true;
 
