@@ -109,7 +109,6 @@ export default {
           this.formHasError = error;
           this.isSubmitted = false;
           eventBus.$emit("resetInput", "");
-          alert("Fail");
         }
       }
     }
