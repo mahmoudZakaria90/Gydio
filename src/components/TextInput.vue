@@ -1,11 +1,12 @@
 <template>
   <label>
+    <span class="text-input-label">{{ label }} {{isRequired ? '*' : ''}}</span>
     <Message
       v-if="isSubmitted && !Boolean(injectedVal)"
       :text="'This field is required!'"
       :color="'red'"
+      :styleObj="{display: 'inline-block'}"
     />
-    <span class="text-input-label">{{ label }} {{isRequired ? '*' : ''}}</span>
     <font-awesome-icon v-if="isValid" :icon="['fas', 'check-circle']"></font-awesome-icon>
     <input
       class="text-input"
@@ -74,6 +75,7 @@ export default {
   margin-bottom: 20px
   &-label
     font-size: 20px
+    margin-right: 20px
   &.hasError
     border-color: red
 </style>

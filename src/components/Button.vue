@@ -1,9 +1,10 @@
 <template>
   <button
     :class="[iconPosition, variant]"
-    :style="{styleObj, 'background-color': variant}"
+    :style="{styleObj}"
     :text="text"
     :disabled="isDisabled"
+    :type="type"
     @click="handleClick"
   >
     <font-awesome-icon v-if="icon &&  iconPosition !== 'right'" :icon="icon" :style="iconStyle"></font-awesome-icon>
@@ -19,6 +20,7 @@ export default {
     styleObj: Object,
     variant: String,
     text: String,
+    type: String,
     icon: Array,
     iconStyle: Object,
     iconPosition: {

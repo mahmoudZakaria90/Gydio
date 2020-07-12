@@ -74,7 +74,6 @@
               database.isError ||
               storage.isProgress
           "
-          class="uploader-btn"
           v-on="{ click: storage.blob ? upload_storage : upload_database }"
         >
           Upload

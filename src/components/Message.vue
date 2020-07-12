@@ -1,5 +1,5 @@
 <template>
-  <p :style="{color}">
+  <p :style="{...styleObj, color}">
     <span>{{text}}</span>
     <font-awesome-icon v-if="icon" :icon="icon" :style="iconStyle"></font-awesome-icon>
   </p>
@@ -11,6 +11,7 @@ export default {
   props: {
     text: String,
     color: String,
+    styleObj: Object,
     icon: Array,
     iconStyle: Object
   }

@@ -31,7 +31,7 @@
           v-model="password.confirmPassword.value"
         />
         <div style="text-align: center">
-          <button type="submit">Submit</button>
+          <Button :type="'submit'">Submit</Button>
         </div>
         <Message v-if="isSuccess" :color="'green'" :text="'User has been created successfully'" />
         <Message v-if="formHasError" :color="'red'" :text="formHasError.message" />
@@ -43,6 +43,7 @@
 <script>
 import firebase from "firebase/app";
 
+import Button from "../../components/Button";
 import Dialog from "../../components/Dialog";
 import Message from "../../components/Message";
 import TextInput from "../../components/TextInput";
@@ -52,6 +53,7 @@ import { isEmail } from "../../utils/validation";
 export default {
   name: "Register",
   components: {
+    Button,
     Dialog,
     Message,
     TextInput

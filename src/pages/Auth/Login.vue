@@ -23,7 +23,7 @@
           v-model="password.value"
         />
         <div style="text-align: center">
-          <button type="submit">Submit</button>
+          <Button :type="'submit'">Submit</Button>
         </div>
         <Message v-if="isSuccess" :color="'green'" :text="'User has been Logged in successfully'" />
         <Message v-if="formHasError" :color="'red'" :text="formHasError.message" />
@@ -42,6 +42,7 @@ import firebase from "firebase/app";
 import { eventBus } from "../../utils/bus";
 import { isEmail } from "../../utils/validation";
 
+import Button from "../../components/Button";
 import Dialog from "../../components/Dialog";
 import Message from "../../components/Message";
 import TextInput from "../../components/TextInput";
@@ -52,6 +53,7 @@ import GoogleButton from "./GoogleButton";
 export default {
   name: "Login",
   components: {
+    Button,
     Dialog,
     FacebookButton,
     GoogleButton,
