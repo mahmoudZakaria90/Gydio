@@ -10,7 +10,7 @@
     <font-awesome-icon v-if="isValid" :icon="['fas', 'check-circle']"></font-awesome-icon>
     <input
       class="text-input"
-      :class="{hasError: (isSubmitted && !isValid) || (isSubmitted && !Boolean(injectedVal))}"
+      :class="{hasError: (isSubmitted && !isValid) && (isSubmitted && !Boolean(injectedVal))}"
       :type="inputType || 'text'"
       :disabled="isDisabled"
       @change="handleOnChange"
