@@ -33,7 +33,7 @@
         <div class="external-link-inner">
           <TextInput
             :label="'Copy/paste an external link e.g. youtube'"
-            :isDisabled="storage.blob"
+            :isDisabled="Boolean(storage.blob)"
             :isValid="database.isValid"
             :hasError="database.isError"
             :errorMsg="database.errorMsg"
