@@ -96,7 +96,7 @@ import firebase from "firebase/app";
 import Message from "../components/Message";
 import TextInput from "../components/TextInput";
 
-import { MusicModel } from "../models/Music";
+import MusicModel from "../models/Music";
 
 import { eventBus } from "../utils/bus";
 
@@ -149,9 +149,13 @@ export default {
       this.database.isSuccess = false;
 
       const { name, size } = this.storage.blob;
-      const user = firebase.auth().currentUser;
-      const musicDb = firebase.firestore();
-      const storageRef = firebase.storage().ref("music/" + name);
+
+      const { auth, storage, firestore } = firebase;
+      const user = auth().currentUser;
+      const musicDb = firestore();
+      const musicCollection = musicDb.collection("music");
+
+      const storageRef = storage().ref("music/" + name);
       const task = storageRef.put(this.storage.blob);
 
       //For cancelling the uploading
@@ -191,26 +195,16 @@ export default {
           );
         },
         async () => {
+          const downloadUrl = await storageRef.getDownloadURL();
           this.storage.progressState = `Uploading is done successfully`;
           this.storage.isSuccess = true;
-          console.log(
-            new MusicModel(
-              name,
-              this.storage.blob,
-              size,
-              await storageRef.getDownloadURL(),
-              user
-            )
-          );
-          musicDb.collection("music").add({
-            name,
-            size,
-            downloadUrl: await storageRef.getDownloadURL(),
-            user: {
+
+          musicCollection.add(
+            new MusicModel(name, size, downloadUrl, {
               displayName: user.displayName,
               email: user.email
-            }
-          });
+            })
+          );
 
           //Reset
           this.resetState(
