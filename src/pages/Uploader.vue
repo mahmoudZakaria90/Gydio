@@ -46,7 +46,7 @@
             :handleOnChange="validateExternalURL"
             v-model="database.externalLink"
           />
-          <Message :color="'red'" :text="database.uploadErrorMsg" />
+          <Message v-if="database.uploadErrorMsg" :color="'red'" :text="database.uploadErrorMsg" />
         </div>
       </div>
       <div v-if="storage.isProgress" class="progress-outer">
