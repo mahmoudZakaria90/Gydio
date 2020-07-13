@@ -15,6 +15,7 @@ import Header from "./components/Header";
 import "firebase/storage";
 import 'firebase/auth';
 import 'firebase/database';
+import 'firebase/firestore';
 
 library.add(faPlusCircle, faCheckCircle, faArrowCircleUp, faTimesCircle, faFacebookF, faGoogle);
 
