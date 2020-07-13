@@ -8,15 +8,20 @@
       <strong>Uploaded:</strong>
       {{dateTimeFormatted}}
     </div>
-    <div>
+    <div v-if="user">
       <img class="user-pic" :src="user.photoUrl" alt />
       <span>{{user.name}}</span>
+    </div>
+    <div v-else>
+      <img class="user-pic" :src="userPlaceholder" alt />
+      <span>Anonymous</span>
     </div>
   </div>
 </template>
 
 <script>
 import placeholder from "../../assets/images/play-button.png";
+import userPlaceholder from "../../assets/images/user-placeholder.jpg";
 export default {
   name: "Track",
   props: {
@@ -29,7 +34,8 @@ export default {
   },
   data() {
     return {
-      placeholder
+      placeholder,
+      userPlaceholder
     };
   },
   computed: {
