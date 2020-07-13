@@ -6,11 +6,13 @@
       <Message v-if="errorMsg" :text="errorMsg" :color="'red'" />
       <TrackWrapper :row="true" :basis="'col-4'">
         <Track
-          v-for="track in sortedTracks"
-          :key="track.generation"
-          :name="track.name"
-          :dateUploaded="track.dateUploaded"
-          :callback="changeSelectedTrack"
+          v-for="({id, data}) in tracks"
+          :key="id"
+          :name="data.name"
+          :creationDate="data.creationDate"
+          :downloadUrl="data.downloadUrl"
+          :user="data.user"
+          :changeSelectedTrack="changeSelectedTrack"
         />
       </TrackWrapper>
     </div>
@@ -51,43 +53,25 @@ export default {
     };
   },
   methods: {
-    async changeSelectedTrack(newTrack) {
-      const storageRef = firebase.storage().ref("music/" + newTrack);
-      try {
-        this.selectedTrack = await storageRef.getDownloadURL();
-      } catch (error) {
-        this.errorMsg = error.message;
-      }
+    changeSelectedTrack(newTrack) {
+      this.selectedTrack = newTrack;
     }
   },
   async mounted() {
-    const storageRef = firebase.storage().ref("music");
     this.loadingState = "Loading...";
+    const { firestore } = firebase;
+    const musicDb = firestore();
 
     try {
-      const { items } = await storageRef.listAll();
-      this.tracks =
-        items &&
-        (await Promise.all(
-          items.map(async ({ name }) => {
-            const childRef = storageRef.child(name);
-            const { timeCreated, generation } = await childRef.getMetadata();
-
-            const formattedDate = new Date(timeCreated).toDateString();
-            const formattedTime = new Date(timeCreated)
-              .toTimeString()
-              .split(" GMT")[0];
-
-            const finalDateTime = `${formattedDate}, ${formattedTime}.`;
-
-            return {
-              name,
-              originalDate: timeCreated,
-              dateUploaded: finalDateTime,
-              generation
-            };
-          })
-        ));
+      const { docs } = await musicDb
+        .collection("music")
+        .orderBy("creationDate", "desc")
+        .get();
+      const tracks = docs.map(doc => ({
+        id: doc.id,
+        data: doc.data()
+      }));
+      this.tracks = tracks;
     } catch (error) {
       this.errorMsg = error.message;
     }
@@ -115,17 +99,6 @@ export default {
       }
     } catch (error) {
       this.errorMsg = error.message;
-    }
-  },
-  computed: {
-    sortedTracks() {
-      return this.tracks.slice(0).sort((a, b) => {
-        const { originalDate: aOriginalDate } = a;
-        const { originalDate: bOriginalDate } = b;
-        return (
-          new Date(bOriginalDate).getTime() - new Date(aOriginalDate).getTime()
-        );
-      });
     }
   }
 };

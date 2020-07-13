@@ -1,9 +1,7 @@
-export default (name, size, downloadUrl, user, createdDate = Date.now()) => {
-    return {
-        name,
-        size,
-        downloadUrl,
-        user,
-        createdDate
-    }
-}
+export default (name, size, downloadUrl, user, creationDate = Date.now()) => ({
+    name,
+    size,
+    downloadUrl,
+    user,
+    creationDate
+})

@@ -1,13 +1,17 @@
 <template>
-  <div class="track col" @click="()=> callback(name)">
+  <div class="track col" @click="()=> changeSelectedTrack(downloadUrl)">
     <div class="track-placeholder">
       <img :src="img || placeholder" alt />
     </div>
     <div class="track-name" :title="name">{{name}}</div>
-    <small>
+    <div class="track-date">
       <strong>Uploaded:</strong>
-      {{dateUploaded}}
-    </small>
+      {{dateTimeFormatted}}
+    </div>
+    <div>
+      <img class="user-pic" :src="user.photoUrl" alt />
+      <span>{{user.name}}</span>
+    </div>
   </div>
 </template>
 
@@ -17,14 +21,24 @@ export default {
   name: "Track",
   props: {
     name: String,
-    dateUploaded: String,
+    downloadUrl: String,
+    creationDate: Number,
     img: String,
-    callback: Function
+    user: Object,
+    changeSelectedTrack: Function
   },
   data() {
     return {
       placeholder
     };
+  },
+  computed: {
+    dateTimeFormatted() {
+      const date = new Date(this.creationDate);
+      const dateFormatted = date.toDateString();
+      const timeFormatted = date.toLocaleTimeString();
+      return `${dateFormatted}, ${timeFormatted}`;
+    }
   }
 };
 </script>
@@ -37,4 +51,14 @@ export default {
     overflow: hidden
     text-overflow: ellipsis
     margin-top: 10px
+  &-date
+    margin: 10px 0
+    font-size: small
+
+.user
+  &-pic
+    display: inline-block
+    margin-right: 10px
+    border-radius: 50%
+    width: 25px
 </style>

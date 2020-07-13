@@ -27,6 +27,12 @@
           <font-awesome-icon :icon="['fas', 'plus-circle']" />
         </label>
         <span>{{ storage.fileName }}</span>
+        <font-awesome-icon
+          class="remove-blob"
+          @click="removeBlob"
+          v-if="storage.blob && storage.fileName && !storage.isProgress"
+          :icon="['far', 'times-circle']"
+        />
         <p>Or</p>
       </div>
       <div class="external-link">
@@ -97,6 +103,8 @@ import Message from "../components/Message";
 import TextInput from "../components/TextInput";
 
 import MusicModel from "../models/Music";
+import UserModel from "../models/User";
+import YoutubeModel from "../models/Youtube";
 
 import { eventBus } from "../utils/bus";
 
@@ -151,7 +159,13 @@ export default {
       const { name, size } = this.storage.blob;
 
       const { auth, storage, firestore } = firebase;
-      const user = auth().currentUser;
+      const {
+        displayName,
+        photoURL,
+        email,
+        metadata: { lastSignInTime }
+      } = auth().currentUser;
+
       const musicDb = firestore();
       const musicCollection = musicDb.collection("music");
 
@@ -188,6 +202,8 @@ export default {
           this.resetState(
             "storage",
             [
+              { key: "blob", value: null },
+              { key: "fileName", value: null },
               { key: "isProgress", value: false },
               { key: "isCancelled", value: false }
             ],
@@ -195,16 +211,22 @@ export default {
           );
         },
         async () => {
-          const downloadUrl = await storageRef.getDownloadURL();
+          try {
+            const downloadUrl = await storageRef.getDownloadURL();
+            await musicCollection.add(
+              MusicModel(
+                name,
+                size,
+                downloadUrl,
+                UserModel(displayName, photoURL, email, lastSignInTime)
+              )
+            );
+          } catch (error) {
+            this.uploadErrorMsg = error.message;
+          }
+
           this.storage.progressState = `Uploading is done successfully`;
           this.storage.isSuccess = true;
-
-          musicCollection.add(
-            new MusicModel(name, size, downloadUrl, {
-              displayName: user.displayName,
-              email: user.email
-            })
-          );
 
           //Reset
           this.resetState(
@@ -226,19 +248,26 @@ export default {
       this.storage.progressState = null;
       this.storage.isSuccess = false;
 
-      const [videoId] = this.database.externalLink.match(this.database.pattern);
-      const [, videoIdSplitted] = videoId.split("watch?v=");
+      const { auth, firestore } = firebase;
+      const {
+        displayName,
+        email,
+        photoURL,
+        metadata: { lastSignInTime }
+      } = auth().currentUser;
+      const youtubeDb = firestore();
+      const youtubeCollection = youtubeDb.collection("youtube");
       const [videoURL] = this.database.externalLink.match(
         this.database.pattern
       );
+
       try {
-        await firebase
-          .database()
-          .ref("music/" + videoIdSplitted)
-          .set({
+        await youtubeCollection.add(
+          YoutubeModel(
             videoURL,
-            uploaded: Date.now()
-          });
+            UserModel(displayName, photoURL, email, lastSignInTime)
+          )
+        );
       } catch (error) {
         this.uploadErrorMsg = error.message;
       }
@@ -278,6 +307,10 @@ export default {
         });
         if (cb) cb();
       }, timeout);
+    },
+    removeBlob() {
+      this.storage.blob = null;
+      this.storage.fileName = null;
     },
     cancelUpload() {}
   },
@@ -357,4 +390,7 @@ export default {
 .error
   color: red
   margin-top: 10px
+
+.remove-blob
+  cursor: pointer
 </style>
