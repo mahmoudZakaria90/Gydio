@@ -27,7 +27,7 @@ export default {
     align-items: center
     justify-content: center
   &-body
-    width: 500px
+    max-width: 500px
     padding: 40px
     border-radius: 5px
     margin: auto
