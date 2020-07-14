@@ -14,7 +14,7 @@ const routes = [
     { path: '/explore', component: Explore, name: 'Explore' },
     { path: '/register', component: Register, name: 'Register' },
     { path: '/login', component: Login, name: 'Login' },
-    { path: '/users/:id', component: Profile, name: 'Profile' }
+    { path: '/profile/:id', component: Profile, name: 'Profile' }
 
 
 ]

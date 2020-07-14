@@ -1,5 +1,5 @@
 <template>
-  <router-link :to="`/users/${user.uid}`" v-if="user">
+  <router-link :to="`/profile/${user.uid}`" v-if="user">
     <img class="user-pic" :src="user.photoUrl" alt />
     <span>{{user.name}}</span>
   </router-link>
