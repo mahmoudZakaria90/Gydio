@@ -208,6 +208,7 @@ export default {
           const { currentUser } = auth();
           if (currentUser) {
             var {
+              uid,
               displayName,
               photoURL,
               email,
@@ -223,7 +224,7 @@ export default {
                 size,
                 downloadUrl,
                 currentUser &&
-                  UserModel(displayName, photoURL, email, lastSignInTime)
+                  UserModel(uid, displayName, photoURL, email, lastSignInTime)
               )
             );
           } catch (error) {
@@ -257,6 +258,7 @@ export default {
       const { currentUser } = auth();
       if (currentUser) {
         var {
+          uid,
           displayName,
           email,
           photoURL,
@@ -275,7 +277,7 @@ export default {
           YoutubeModel(
             videoURLEmbed,
             currentUser &&
-              UserModel(displayName, photoURL, email, lastSignInTime)
+              UserModel(uid, displayName, photoURL, email, lastSignInTime)
           )
         );
       } catch (error) {

@@ -1,8 +1,8 @@
 <template>
-  <div v-if="user">
+  <router-link :to="`/users/${user.uid}`" v-if="user">
     <img class="user-pic" :src="user.photoUrl" alt />
     <span>{{user.name}}</span>
-  </div>
+  </router-link>
   <div v-else>
     <img class="user-pic" :src="userPlaceholder" alt />
     <span>Anonymous</span>
@@ -27,9 +27,9 @@ export default {
 
 <style lang="sass" scoped>
 .user
-    &-pic
-        display: inline-block
-        margin-right: 10px
-        border-radius: 50%
-        width: 25px
+  &-pic
+    display: inline-block
+    margin-right: 10px
+    border-radius: 50%
+    width: 25px
 </style>

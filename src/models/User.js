@@ -1,4 +1,5 @@
-export default (name, photoUrl, email, lastSignInTime) => ({
+export default (uid, name, photoUrl, email, lastSignInTime) => ({
+    uid,
     name,
     photoUrl,
     email,
