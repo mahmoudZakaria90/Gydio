@@ -4,7 +4,7 @@
       :handleClick="handleClick"
       :icon="['fab', 'google']"
       :variant="'danger'"
-      :style="{width: '100%'}"
+      :style="{width: '100%', 'margin-right': 0}"
     >Login with Google</Button>
     <Message v-if="errorMsg" :color="'red'" :text="errorMsg" />
   </div>

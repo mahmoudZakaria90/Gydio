@@ -1,6 +1,6 @@
 <template>
   <div class="dialog-outer">
-    <div class="dialog-inner">
+    <div class="container">
       <h1 class="dialog-title">
         <slot name="dialog-title"></slot>
       </h1>
@@ -26,8 +26,9 @@ export default {
     height: 100vh
     align-items: center
     justify-content: center
+    .container
+      flex-basis: 500px
   &-body
-    max-width: 500px
     padding: 40px
     border-radius: 5px
     margin: auto

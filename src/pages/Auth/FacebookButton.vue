@@ -3,7 +3,7 @@
     <Button
       :handleClick="handleClick"
       :icon="['fab', 'facebook-f']"
-      :style="{width: '100%'}"
+      :style="{width: '100%', 'margin-right': 0}"
     >Login with Facebook</Button>
     <Message v-if="errorMsg" :color="'red'" :text="errorMsg" />
   </div>
