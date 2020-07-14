@@ -159,14 +159,6 @@ export default {
       const { name, size } = this.storage.blob;
 
       const { auth, storage, firestore } = firebase;
-      if (auth().currentUser) {
-        var {
-          displayName,
-          photoURL,
-          email,
-          metadata: { lastSignInTime }
-        } = auth().currentUser;
-      }
 
       const musicDb = firestore();
       const musicCollection = musicDb.collection("music");
@@ -213,6 +205,16 @@ export default {
           );
         },
         async () => {
+          const { currentUser } = auth();
+          if (currentUser) {
+            var {
+              displayName,
+              photoURL,
+              email,
+              metadata: { lastSignInTime }
+            } = currentUser;
+          }
+
           try {
             const downloadUrl = await storageRef.getDownloadURL();
             await musicCollection.add(
@@ -220,7 +222,7 @@ export default {
                 name,
                 size,
                 downloadUrl,
-                auth().currentUser &&
+                currentUser &&
                   UserModel(displayName, photoURL, email, lastSignInTime)
               )
             );
@@ -252,13 +254,14 @@ export default {
       this.storage.isSuccess = false;
 
       const { auth, firestore } = firebase;
-      if (auth().currentUser) {
+      const { currentUser } = auth();
+      if (currentUser) {
         var {
           displayName,
           email,
           photoURL,
           metadata: { lastSignInTime }
-        } = auth().currentUser;
+        } = currentUser;
       }
       const youtubeDb = firestore();
       const youtubeCollection = youtubeDb.collection("youtube");
@@ -270,7 +273,7 @@ export default {
         await youtubeCollection.add(
           YoutubeModel(
             videoURL,
-            auth().currentUser &&
+            currentUser &&
               UserModel(displayName, photoURL, email, lastSignInTime)
           )
         );

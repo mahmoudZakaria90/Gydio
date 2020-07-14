@@ -126,7 +126,7 @@ export default {
           await user.sendEmailVerification();
           setTimeout(() => {
             this.$router.push("/");
-          }, 3000);
+          }, 1000);
           this.formHasError = null;
         } catch (error) {
           this.isSuccess = false;
