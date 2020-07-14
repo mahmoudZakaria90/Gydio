@@ -19,7 +19,13 @@
     <div class="container">
       <h1 v-if="externalTracks">External videos 'Youtube'</h1>
       <TrackWrapper :row="true" :basis="'col-6'">
-        <ExternalTrack v-for="track in externalTracks" :key="track.id" :videoURL="track.videoURL" />
+        <ExternalTrack
+          v-for="({id, data}) in externalTracks"
+          :key="id"
+          :creationDate="data.creationDate"
+          :user="data.user"
+          :videoURL="data.url"
+        />
       </TrackWrapper>
     </div>
     <audio :src="selectedTrack" autoplay controls controlslist="nodownload"></audio>
@@ -60,10 +66,10 @@ export default {
   async mounted() {
     this.loadingState = "Loading...";
     const { firestore } = firebase;
-    const musicDb = firestore();
+    const db = firestore();
 
     try {
-      const { docs } = await musicDb
+      const { docs } = await db
         .collection("music")
         .orderBy("creationDate", "desc")
         .get();
@@ -78,22 +84,16 @@ export default {
 
     try {
       //External videos
-      const databaseFetch = await fetch(
-        "https://musicstream-cb9d3.firebaseio.com/music.json"
-      );
-      const databaseResult = await databaseFetch.json();
-      this.externalTracks =
-        databaseResult &&
-        Object.entries(databaseResult)
-          .map(([id, { videoURL, uploaded }]) => {
-            const trimmedURL = videoURL.replace("watch?v=", "embed/");
-            return {
-              id,
-              videoURL: trimmedURL,
-              uploaded
-            };
-          })
-          .sort((a, b) => b.uploaded - a.uploaded);
+      const { docs } = await db
+        .collection("youtube")
+        .orderBy("creationDate", "desc")
+        .get();
+      const externalTracks = docs.map(doc => ({
+        id: doc.id,
+        data: doc.data()
+      }));
+      this.externalTracks = externalTracks;
+
       if (!this.tracks.length && !this.externalTracks) {
         this.loadingState = "No files to explore!";
       }

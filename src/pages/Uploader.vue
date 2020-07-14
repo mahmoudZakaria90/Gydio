@@ -10,7 +10,7 @@
         <h1>Gydio</h1>
         <p>
           Your favorite place for
-          <strong>Gaming</strong> related Music, Themes and Soundtracks.
+          <strong>Gaming/Cartoon</strong> related Music, Themes and Soundtracks.
         </p>
       </div>
       <h2 class="uploader-title">Upload your fav track.</h2>
@@ -268,11 +268,12 @@ export default {
       const [videoURL] = this.database.externalLink.match(
         this.database.pattern
       );
+      let videoURLEmbed = videoURL.replace("watch?v=", "embed/");
 
       try {
         await youtubeCollection.add(
           YoutubeModel(
-            videoURL,
+            videoURLEmbed,
             currentUser &&
               UserModel(displayName, photoURL, email, lastSignInTime)
           )
