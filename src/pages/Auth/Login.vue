@@ -30,8 +30,17 @@
       </form>
     </template>
     <div class="login-social">
-      <GoogleButton />
-      <FacebookButton />
+      <Button
+        :handleClick="googleLogin"
+        :icon="['fab', 'google']"
+        :variant="'danger'"
+        :style="{width: '100%', 'margin-right': 0}"
+      >Login with Google</Button>
+      <Button
+        :handleClick="facebookLogin"
+        :icon="['fab', 'facebook-f']"
+        :style="{width: '100%', 'margin-right': 0}"
+      >Login with Facebook</Button>
     </div>
   </Dialog>
 </template>
@@ -47,16 +56,12 @@ import Dialog from "../../components/Dialog";
 import Message from "../../components/Message";
 import TextInput from "../../components/TextInput";
 
-import FacebookButton from "./FacebookButton";
-import GoogleButton from "./GoogleButton";
-
 export default {
   name: "Login",
   components: {
     Button,
     Dialog,
-    FacebookButton,
-    GoogleButton,
+
     Message,
     TextInput
   },
@@ -110,6 +115,28 @@ export default {
           this.isSubmitted = false;
           eventBus.$emit("resetInput", "");
         }
+      }
+    },
+    async facebookLogin() {
+      const provider = new firebase.auth.FacebookAuthProvider();
+      try {
+        await firebase.auth().signInWithPopup(provider);
+        setTimeout(() => {
+          this.$router.push("/");
+        }, 1000);
+      } catch (error) {
+        this.formHasError = error;
+      }
+    },
+    async googleLogin() {
+      const provider = new firebase.auth.GoogleAuthProvider();
+      try {
+        await firebase.auth().signInWithPopup(provider);
+        setTimeout(() => {
+          this.$router.push("/");
+        }, 1000);
+      } catch (error) {
+        this.formHasError = error;
       }
     }
   }

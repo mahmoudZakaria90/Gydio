@@ -121,12 +121,12 @@ export default {
               this.email.value,
               this.password.value
             );
-          this.isSuccess = true;
-          const user = firebase.auth().currentUser;
-          await user.sendEmailVerification();
+          const { currentUser } = firebase.auth();
+          await currentUser.sendEmailVerification();
           setTimeout(() => {
             this.$router.push("/");
           }, 1000);
+          this.isSuccess = true;
           this.formHasError = null;
         } catch (error) {
           this.isSuccess = false;
