@@ -21,6 +21,7 @@
           type="file"
           :disabled="database.externalLink || storage.isProgress"
           hidden
+          :value="null"
         />
         <label for="file_uploader" class="uploader-placeholder-btn">
           Choose file
@@ -124,8 +125,7 @@ export default {
         progressState: null,
         fileName: null,
         isProgress: false,
-        isSuccess: false,
-        storage: false
+        isSuccess: false
       },
       database: {
         externalLink: null,
