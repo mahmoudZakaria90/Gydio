@@ -13,7 +13,6 @@ export default {
   },
   computed: {
     dateTimeFormatted() {
-      console.log(this.creationDate);
       const date = new Date(this.creationDate);
       const dateFormatted = date.toDateString();
       const timeFormatted = date.toLocaleTimeString();
