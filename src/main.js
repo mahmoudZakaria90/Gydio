@@ -22,16 +22,25 @@ library.add(faPlusCircle, faCheckCircle, faArrowCircleUp, faTimesCircle, faFaceb
 Vue.component('font-awesome-icon', FontAwesomeIcon);
 Vue.component('Header', Header);
 
+const {
+  VUE_APP_API_KEY,
+  VUE_APP_AUTH_DOMAIN,
+  VUE_APP_DATA_BASEURL,
+  VUE_APP_PROJECT_ID,
+  VUE_APP_STORAGE_BUCKET,
+  VUE_APP_MESSAGING_SENDER_ID,
+  VUE_APP_APP_ID
+} = process.env;
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
-  apiKey: "AIzaSyBcgNUdZo31IDTvypMjfHvPPms3EPWAycM",
-  authDomain: "musicstream-cb9d3.firebaseapp.com",
-  databaseURL: "https://musicstream-cb9d3.firebaseio.com",
-  projectId: "musicstream-cb9d3",
-  storageBucket: "musicstream-cb9d3.appspot.com",
-  messagingSenderId: "801591518704",
-  appId: "1:801591518704:web:fe152ffb22de13e8fc2935"
+  apiKey: VUE_APP_API_KEY,
+  authDomain: VUE_APP_AUTH_DOMAIN,
+  databaseURL: VUE_APP_DATA_BASEURL,
+  projectId: VUE_APP_PROJECT_ID,
+  storageBucket: VUE_APP_STORAGE_BUCKET,
+  messagingSenderId: VUE_APP_MESSAGING_SENDER_ID,
+  appId: VUE_APP_APP_ID
 };
 // Initialize Firebase
 firebase.initializeApp(firebaseConfig);

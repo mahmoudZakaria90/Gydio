@@ -15,8 +15,6 @@ const routes = [
     { path: '/register', component: Register, name: 'Register' },
     { path: '/login', component: Login, name: 'Login' },
     { path: '/profile/:id', component: Profile, name: 'Profile' }
-
-
 ]
 
 export default new VueRouter({
