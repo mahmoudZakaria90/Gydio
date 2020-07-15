@@ -12,7 +12,7 @@
           :name="data.name"
           :creationDate="data.creationDate"
           :downloadUrl="data.downloadUrl"
-          :selected="id === selectedTrack.id"
+          :selected="(id === selectedTrack.id) && selectedTrack.isPlayed"
           :user="data.user"
           :changeSelectedTrack="changeSelectedTrack"
         />
@@ -31,7 +31,14 @@
         />
       </TrackWrapper>
     </div>
-    <audio :src="selectedTrack.value" autoplay controls controlslist="nodownload"></audio>
+    <audio
+      preload="none"
+      :src="selectedTrack.value"
+      ref="audio"
+      autoplay
+      controls
+      controlslist="nodownload"
+    ></audio>
   </div>
 </template>
 
@@ -57,7 +64,8 @@ export default {
       tracks: [],
       selectedTrack: {
         id: null,
-        value: null
+        value: null,
+        isPlayed: false
       },
       externalTracks: [],
       loadingState: null,
@@ -66,10 +74,24 @@ export default {
   },
   methods: {
     changeSelectedTrack(id, value) {
-      this.selectedTrack = { id, value };
+      this.selectedTrack.id = id;
+      this.selectedTrack.value = value;
+
+      //Toggling, not the best practise
+      if (this.selectedTrack.isPlayed) {
+        this.$refs.audio.pause();
+      } else {
+        this.$refs.audio.play();
+      }
     }
   },
   async mounted() {
+    this.$refs.audio.onplay = () => {
+      this.selectedTrack.isPlayed = true;
+    };
+    this.$refs.audio.onpause = () => {
+      this.selectedTrack.isPlayed = false;
+    };
     this.loadingState = "Loading...";
     const { firestore } = firebase;
     const db = firestore();
