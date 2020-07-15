@@ -27,7 +27,7 @@ export default {
       const getUser = await fetch(
         `${VUE_APP_USERS_ENDPOINT}${this.$route.params.id}`,
         {
-          mode: "no-cors"
+          mode: "cors"
         }
       );
       const user = await getUser.json();
