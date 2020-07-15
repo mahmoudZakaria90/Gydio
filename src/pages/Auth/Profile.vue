@@ -38,5 +38,5 @@ export default {
 
 <style lang="sass" scoped>
 img
-    margin: 0 auto
+  margin: 0 auto
 </style>
