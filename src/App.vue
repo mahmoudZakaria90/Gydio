@@ -1,7 +1,7 @@
 <template>
   <div>
     <Header v-if="$route.name !== 'Uploader'" />
-    <router-view></router-view>
+    <router-view />
   </div>
 </template>
 

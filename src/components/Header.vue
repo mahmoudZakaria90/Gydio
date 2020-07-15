@@ -3,7 +3,7 @@
     <header>
       <nav class="nav">
         <slot name="nav-left">
-          <router-link to="/">Back</router-link>
+          <div class="back" @click="stepBackward">Back</div>
         </slot>
         <ul v-if="!user" class="nav-right">
           <li>
@@ -50,6 +50,9 @@ export default {
   methods: {
     signOut() {
       firebase.auth().signOut();
+    },
+    stepBackward() {
+      this.$router.go(-1);
     }
   },
   mounted() {
@@ -92,4 +95,6 @@ export default {
 .user
   margin-left: auto
   margin-bottom: 0
+.back
+  cursor: pointer
 </style>

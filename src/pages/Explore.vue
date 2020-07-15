@@ -2,7 +2,7 @@
   <div>
     <div class="container">
       <h1 v-if="tracks">Explore</h1>
-      <Message v-if="!tracks.length && !externalTracks" :text="loadingState"></Message>
+      <Message v-if="!tracks.length" :text="loadingState"></Message>
       <Message v-if="errorMsg" :text="errorMsg" :color="'red'" />
       <TrackWrapper :row="true" :basis="'col-4'">
         <Track
@@ -17,7 +17,8 @@
       </TrackWrapper>
     </div>
     <div class="container">
-      <h1 v-if="externalTracks">External videos 'Youtube'</h1>
+      <h1>External videos 'Youtube'</h1>
+      <Message v-if="!externalTracks.length" :text="loadingState"></Message>
       <TrackWrapper :row="true" :basis="'col-6'">
         <ExternalTrack
           v-for="({id, data}) in externalTracks"
@@ -53,7 +54,7 @@ export default {
     return {
       tracks: [],
       selectedTrack: null,
-      externalTracks: null,
+      externalTracks: [],
       loadingState: null,
       errorMsg: null
     };
@@ -93,12 +94,11 @@ export default {
         data: doc.data()
       }));
       this.externalTracks = externalTracks;
-
-      if (!this.tracks.length && !this.externalTracks) {
-        this.loadingState = "No files to explore!";
-      }
     } catch (error) {
       this.errorMsg = error.message;
+    }
+    if (!this.tracks.length && !this.externalTracks.length) {
+      this.loadingState = "No files to explore!";
     }
   }
 };
