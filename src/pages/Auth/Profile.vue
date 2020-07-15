@@ -13,6 +13,8 @@
 </template>
 
 <script>
+import axios from "axios";
+
 export default {
   name: "User",
   data() {
@@ -24,14 +26,11 @@ export default {
   async mounted() {
     const { VUE_APP_USERS_ENDPOINT } = process.env;
     try {
-      const getUser = await fetch(
-        `${VUE_APP_USERS_ENDPOINT}${this.$route.params.id}`,
-        {
-          mode: "cors"
-        }
+      const { data } = await axios.get(
+        `${VUE_APP_USERS_ENDPOINT}${this.$route.params.id}`
       );
-      const user = await getUser.json();
-      this.user = user;
+
+      this.user = data;
     } catch (error) {
       this.errorMsg = error.message;
     }
