@@ -5,7 +5,7 @@ import firebase from "firebase/app";
 
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { faPlusCircle, faCheckCircle, faArrowCircleUp } from '@fortawesome/free-solid-svg-icons';
-import { faTimesCircle } from '@fortawesome/free-regular-svg-icons';
+import { faTimesCircle, faPlayCircle, faPauseCircle } from '@fortawesome/free-regular-svg-icons';
 import { faFacebookF, faGoogle } from '@fortawesome/free-brands-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import "./assets/sass/general.sass";
@@ -17,7 +17,8 @@ import 'firebase/auth';
 import 'firebase/database';
 import 'firebase/firestore';
 
-library.add(faPlusCircle, faCheckCircle, faArrowCircleUp, faTimesCircle, faFacebookF, faGoogle);
+library.add(faPlusCircle, faCheckCircle, faArrowCircleUp, faTimesCircle, faFacebookF, faGoogle, faPlayCircle,
+  faPauseCircle);
 
 Vue.component('font-awesome-icon', FontAwesomeIcon);
 Vue.component('Header', Header);

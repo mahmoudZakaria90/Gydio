@@ -8,9 +8,11 @@
         <Track
           v-for="({id, data}) in tracks"
           :key="id"
+          :id="id"
           :name="data.name"
           :creationDate="data.creationDate"
           :downloadUrl="data.downloadUrl"
+          :selected="id === selectedTrack.id"
           :user="data.user"
           :changeSelectedTrack="changeSelectedTrack"
         />
@@ -29,7 +31,7 @@
         />
       </TrackWrapper>
     </div>
-    <audio :src="selectedTrack" autoplay controls controlslist="nodownload"></audio>
+    <audio :src="selectedTrack.value" autoplay controls controlslist="nodownload"></audio>
   </div>
 </template>
 
@@ -53,15 +55,18 @@ export default {
   data() {
     return {
       tracks: [],
-      selectedTrack: null,
+      selectedTrack: {
+        id: null,
+        value: null
+      },
       externalTracks: [],
       loadingState: null,
       errorMsg: null
     };
   },
   methods: {
-    changeSelectedTrack(newTrack) {
-      this.selectedTrack = newTrack;
+    changeSelectedTrack(id, value) {
+      this.selectedTrack = { id, value };
     }
   },
   async mounted() {

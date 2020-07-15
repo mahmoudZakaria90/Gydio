@@ -7,7 +7,7 @@
       :color="'red'"
       :styleObj="{display: 'inline-block'}"
     />
-    <font-awesome-icon v-if="isValid" :icon="['fas', 'check-circle']"></font-awesome-icon>
+    <font-awesome-icon v-if="isValid" :icon="['fas', 'check-circle']" />
     <input
       class="text-input"
       :class="{hasError: (hasError && !isValid) || (isSubmitted && !Boolean(injectedVal))}"

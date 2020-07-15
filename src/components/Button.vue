@@ -7,9 +7,9 @@
     :type="type"
     @click="handleClick"
   >
-    <font-awesome-icon v-if="icon &&  iconPosition !== 'right'" :icon="icon" :style="iconStyle"></font-awesome-icon>
+    <font-awesome-icon v-if="icon &&  iconPosition !== 'right'" :icon="icon" :style="iconStyle" />
     <slot></slot>
-    <font-awesome-icon v-if="icon && iconPosition === 'right'" :icon="icon" :style="iconStyle"></font-awesome-icon>
+    <font-awesome-icon v-if="icon && iconPosition === 'right'" :icon="icon" :style="iconStyle" />
   </button>
 </template>
 
