@@ -1,7 +1,6 @@
 <template>
   <div v-if="user" class="container" style="text-align:center">
     <h1>
-      Welcome to
       <span style="color: lightcoral">{{user.displayName}}</span>'s profile.
     </h1>
     <div style="margin-bottom: 10px">

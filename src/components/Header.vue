@@ -20,7 +20,9 @@
           </li>
           <li v-else-if="user.displayName">
             Welcome back,
-            <strong>{{firstName}}</strong>
+            <router-link :to="`/profile/${user.uid}`">
+              <strong>{{firstName}}</strong>
+            </router-link>
           </li>
           <li class="nav-right-img" v-if="user.photoURL">
             <img :src="user.photoURL" alt />
