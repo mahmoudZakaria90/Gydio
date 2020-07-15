@@ -17,8 +17,6 @@
 </template>
 
 <script>
-import placeholder from "../../assets/images/play-button.png";
-
 import Date from "../Date";
 import User from "../User";
 
@@ -37,11 +35,6 @@ export default {
     user: Object,
     selected: Boolean,
     changeSelectedTrack: Function
-  },
-  data() {
-    return {
-      placeholder
-    };
   }
 };
 </script>
