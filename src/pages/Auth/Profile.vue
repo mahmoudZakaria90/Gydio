@@ -6,7 +6,10 @@
     <div style="margin-bottom: 10px">
       <img :src="user.photoURL" alt />
     </div>
-    <div>email: {{user.email}}</div>
+    <div>
+      <h1>Email</h1>
+      {{user.email}}
+    </div>
     <p>{{errorMsg}}</p>
   </div>
 </template>
@@ -28,7 +31,6 @@ export default {
       const { data } = await axios.get(
         `${VUE_APP_USERS_ENDPOINT}${this.$route.params.id}`
       );
-
       this.user = data;
     } catch (error) {
       this.errorMsg = error.message;
