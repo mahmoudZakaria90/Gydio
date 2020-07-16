@@ -15,8 +15,6 @@
 </template>
 
 <script>
-import axios from "axios";
-
 export default {
   name: "User",
   data() {
@@ -29,10 +27,11 @@ export default {
     async getUser() {
       const { VUE_APP_USERS_ENDPOINT } = process.env;
       try {
-        const { data } = await axios.get(
+        const data = await fetch(
           `${VUE_APP_USERS_ENDPOINT}${this.$route.params.id}`
         );
-        this.user = data;
+        const user = await data.json();
+        this.user = user;
       } catch (error) {
         this.errorMsg = error.message;
       }
