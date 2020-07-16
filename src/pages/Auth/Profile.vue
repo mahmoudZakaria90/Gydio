@@ -25,16 +25,24 @@ export default {
       errorMsg: null
     };
   },
-  async mounted() {
-    const { VUE_APP_USERS_ENDPOINT } = process.env;
-    try {
-      const { data } = await axios.get(
-        `${VUE_APP_USERS_ENDPOINT}${this.$route.params.id}`
-      );
-      this.user = data;
-    } catch (error) {
-      this.errorMsg = error.message;
+  methods: {
+    async getUser() {
+      const { VUE_APP_USERS_ENDPOINT } = process.env;
+      try {
+        const { data } = await axios.get(
+          `${VUE_APP_USERS_ENDPOINT}${this.$route.params.id}`
+        );
+        this.user = data;
+      } catch (error) {
+        this.errorMsg = error.message;
+      }
     }
+  },
+  mounted() {
+    this.getUser();
+  },
+  updated() {
+    this.getUser();
   }
 };
 </script>
