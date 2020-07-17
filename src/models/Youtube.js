@@ -1,5 +1,5 @@
-export default (url, user, creationDate = Date.now()) => ({
-    url,
+export default (videoId, user, creationDate = Date.now()) => ({
+    videoId,
     user,
     creationDate
 })

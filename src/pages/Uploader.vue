@@ -270,12 +270,12 @@ export default {
       const [videoURL] = this.database.externalLink.match(
         this.database.pattern
       );
-      let videoURLEmbed = videoURL.replace("watch?v=", "embed/");
+      let [, videoId] = videoURL.split("watch?v=");
 
       try {
         await youtubeCollection.add(
           YoutubeModel(
-            videoURLEmbed,
+            videoId,
             currentUser &&
               UserModel(uid, displayName, photoURL, email, lastSignInTime)
           )

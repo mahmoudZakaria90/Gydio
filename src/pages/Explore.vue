@@ -25,9 +25,10 @@
         <ExternalTrack
           v-for="({id, data}) in externalTracks"
           :key="id"
+          :id="id"
           :creationDate="data.creationDate"
           :user="data.user"
-          :videoURL="data.url"
+          :videoId="data.videoId"
         />
       </TrackWrapper>
     </div>
@@ -44,6 +45,7 @@
 
 <script>
 import firebase from "firebase/app";
+import { eventBus } from "../utils/bus";
 
 import TrackWrapper from "../components/Track/Wrapper";
 import Track from "../components/Track/Track";
@@ -86,8 +88,14 @@ export default {
     }
   },
   async mounted() {
+    eventBus.$on("pauseAudio", () => {
+      if (this.selectedTrack.isPlayed) {
+        this.$refs.audio.pause();
+      }
+    });
     this.$refs.audio.onplay = () => {
       this.selectedTrack.isPlayed = true;
+      eventBus.$emit("pauseYoutube");
     };
     this.$refs.audio.onpause = () => {
       this.selectedTrack.isPlayed = false;

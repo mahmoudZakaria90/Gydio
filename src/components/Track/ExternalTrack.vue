@@ -1,21 +1,18 @@
 <template>
   <div class="col">
-    <iframe
-      height="315"
-      same-origin
-      :src="videoURL"
-      frameborder="0"
-      allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
-      allowfullscreen
-    ></iframe>
+    <div :id="`player${id}`"></div>
     <Date :creationDate="creationDate" />
     <User :user="user" />
   </div>
 </template>
 
 <script>
+import YouTubeIframeLoader from "youtube-iframe";
+
 import Date from "../Date";
 import User from "../User";
+
+import { eventBus } from "../../utils/bus";
 
 export default {
   name: "ExternalTrack",
@@ -24,9 +21,34 @@ export default {
     User
   },
   props: {
-    videoURL: String,
+    id: String,
+    videoId: String,
     user: Object,
     creationDate: Number
+  },
+  mounted() {
+    let player;
+    const onReady = () => {
+      eventBus.$on("pauseYoutube", () => {
+        player.pauseVideo();
+      });
+    };
+    const onStateChange = ({ data }) => {
+      if (data === 1) {
+        eventBus.$emit("pauseAudio");
+      }
+    };
+    YouTubeIframeLoader.load(YT => {
+      player = new YT.Player(`player${this.id}`, {
+        height: "400",
+        width: "100%",
+        videoId: this.videoId,
+        events: {
+          onReady,
+          onStateChange
+        }
+      });
+    });
   }
 };
 </script>
