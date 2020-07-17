@@ -1,7 +1,7 @@
 <template>
   <div class="track col">
     <div
-      class="track-placeholder"
+      class="track-placeholder cursor-pointer"
       :style="{'background-image': img}"
       @click="()=> changeSelectedTrack(id, downloadUrl)"
     >
@@ -46,7 +46,6 @@ export default {
     justify-content: center
     align-items: center
     height: 210px
-    cursor: pointer
     background-color: #cacaca
     background-repeat: no-repeat
     background-position: center

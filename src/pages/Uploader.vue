@@ -29,7 +29,7 @@
         </label>
         <span>{{ storage.fileName }}</span>
         <font-awesome-icon
-          class="remove-blob"
+          class="cursor-pointer"
           @click="removeBlob"
           v-if="storage.blob && storage.fileName && !storage.isProgress"
           :icon="['far', 'times-circle']"
@@ -60,9 +60,11 @@
         <div class="progress">
           <span>{{ storage.progress }}%</span>
           <span class="progress-inner" :style="{ width: storage.progress + '%' }"></span>
-          <span ref="cancelUploadEl">
-            <font-awesome-icon :icon="['far', 'times-circle']" />
-          </span>
+          <font-awesome-icon
+            class="progress-cancel cursor-pointer"
+            ref="cancelUploadEl"
+            :icon="['far', 'times-circle']"
+          />
         </div>
         <p
           v-html="
@@ -387,13 +389,12 @@ export default {
     bottom: 0
     background-color: $green
     z-index: -1
-    & + span
-      position: absolute
-      right: -40px
-      top: 0px
-      color: red
-      font-size: 25px
-      cursor: pointer
+  &-cancel
+    position: absolute
+    right: -40px
+    top: 0px
+    color: red
+    font-size: 25px
 #file_uploader
   &:disabled + label
     background-color: $disabled
@@ -402,7 +403,4 @@ export default {
 .error
   color: red
   margin-top: 10px
-
-.remove-blob
-  cursor: pointer
 </style>

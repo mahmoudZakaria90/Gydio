@@ -3,7 +3,7 @@
     <header>
       <nav class="nav">
         <slot name="nav-left">
-          <div class="back" @click="stepBackward">Back</div>
+          <a href="#" @click="stepBackward">Back</a>
         </slot>
         <ul v-if="!user" class="nav-right">
           <li>
@@ -97,6 +97,4 @@ export default {
 .user
   margin-left: auto
   margin-bottom: 0
-.back
-  cursor: pointer
 </style>
