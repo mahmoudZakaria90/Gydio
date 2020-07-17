@@ -66,14 +66,12 @@
             :icon="['far', 'times-circle']"
           />
         </div>
-        <p
-          v-html="
-            storage.bytesTransferred / 1000000 +
-              '/' +
-              storage.totalBytes / 1000000 +
-              ' MB'
-          "
-        ></p>
+        <strong>
+          {{ storage.bytesTransferred / 1000000 +
+          ' / ' +
+          storage.totalBytes / 1000000 +
+          ' MB'}}
+        </strong>
       </div>
 
       <div class="uploader-btn-wrap">

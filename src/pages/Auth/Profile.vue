@@ -1,26 +1,35 @@
 <template>
-  <div v-if="user" class="container" style="text-align:center">
-    <h1>
-      <span style="color: lightcoral">{{user.displayName}}</span>'s profile.
-    </h1>
-    <div style="margin-bottom: 10px">
-      <img :src="user.photoURL" alt />
+  <div>
+    <div v-if="user && !hasError" class="container" style="text-align:center">
+      <h1>
+        <span style="color: lightcoral">{{user.displayName}}</span>'s profile.
+      </h1>
+      <div style="margin-bottom: 10px">
+        <img :src="user.photoURL" alt />
+      </div>
+      <div>
+        <h1>Email</h1>
+        {{user.email}}
+      </div>
     </div>
-    <div>
-      <h1>Email</h1>
-      {{user.email}}
+    <div class="container">
+      <Message v-if="hasError" :color="'red'" :text="errorMsg" />
     </div>
-    <p>{{errorMsg}}</p>
   </div>
 </template>
 
 <script>
+import Message from "../../components/Message";
 export default {
-  name: "User",
+  name: "Profile",
+  components: {
+    Message
+  },
   data() {
     return {
       user: null,
-      errorMsg: null
+      hasError: false,
+      errorMsg: "User is not found (404)"
     };
   },
   methods: {
@@ -33,7 +42,7 @@ export default {
         const user = await data.json();
         this.user = user;
       } catch (error) {
-        this.errorMsg = error.message;
+        this.hasError = true;
       }
     }
   },
