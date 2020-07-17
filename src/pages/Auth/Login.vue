@@ -2,7 +2,13 @@
   <Dialog>
     <template v-slot:dialog-title>Login</template>
     <template v-slot:dialog-body>
-      <form @submit.prevent="handleSubmit">
+      <Form
+        :isSuccess="isSuccess"
+        :successMsg="successMsg"
+        :hasError="formHasError"
+        :errorMsg="formHasError && formHasError.message"
+        :handleSubmit="handleSubmit"
+      >
         <TextInput
           :label="'Email'"
           :isRequired="true"
@@ -23,12 +29,7 @@
           v-model="password.value"
         />
         <router-link to="reset" style="display: inline-block;margin-bottom: 20px">Forgot password?</router-link>
-        <div style="text-align: center">
-          <Button :type="'submit'">Submit</Button>
-        </div>
-        <Message v-if="isSuccess" :color="'green'" :text="successMsg" />
-        <Message v-if="formHasError" :color="'red'" :text="formHasError.message" />
-      </form>
+      </Form>
     </template>
     <div class="login-social">
       <Button
@@ -54,7 +55,7 @@ import { isEmail } from "../../utils/validation";
 
 import Button from "../../components/Button";
 import Dialog from "../../components/Dialog";
-import Message from "../../components/Message";
+import Form from "../../components/Form";
 import TextInput from "../../components/TextInput";
 
 export default {
@@ -62,7 +63,7 @@ export default {
   components: {
     Button,
     Dialog,
-    Message,
+    Form,
     TextInput
   },
   data() {
@@ -79,7 +80,7 @@ export default {
       },
       isSubmitted: null,
       isSuccess: null,
-      successMsg: "User has been Logged in successfully.",
+      successMsg: "User has been logged in successfully.",
       formHasError: null
     };
   },

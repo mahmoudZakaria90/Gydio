@@ -2,7 +2,13 @@
   <Dialog>
     <template v-slot:dialog-title>Reset password</template>
     <template v-slot:dialog-body>
-      <form @submit.prevent="handleSubmit">
+      <Form
+        :isSuccess="isSuccess"
+        :successMsg="successMsg"
+        :hasError="formHasError"
+        :errorMsg="formHasError && formHasError.message"
+        :handleSubmit="handleSubmit"
+      >
         <TextInput
           :label="'Email'"
           :isRequired="true"
@@ -12,12 +18,7 @@
           :errorMsg="email.errorMsg"
           v-model="email.value"
         />
-        <div style="text-align: center">
-          <Button :type="'submit'">Submit</Button>
-        </div>
-        <Message v-if="isSuccess" :color="'green'" :text="successMsg" />
-        <Message v-if="formHasError" :color="'red'" :text="formHasError.message" />
-      </form>
+      </Form>
     </template>
   </Dialog>
 </template>
@@ -28,17 +29,15 @@ import firebase from "firebase/app";
 import { eventBus } from "../../utils/bus";
 import { isEmail } from "../../utils/validation";
 
-import Button from "../../components/Button";
 import Dialog from "../../components/Dialog";
-import Message from "../../components/Message";
+import Form from "../../components/Form";
 import TextInput from "../../components/TextInput";
 
 export default {
   name: "Login",
   components: {
-    Button,
     Dialog,
-    Message,
+    Form,
     TextInput
   },
   data() {
@@ -75,6 +74,9 @@ export default {
           await firebase.auth().sendPasswordResetEmail(this.email.value);
           this.isSuccess = true;
           this.formHasError = null;
+          setTimeout(() => {
+            this.$router.push("/login");
+          }, 3000);
         } catch (error) {
           this.formHasError = error;
           this.isSuccess = false;

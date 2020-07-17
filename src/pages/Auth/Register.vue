@@ -2,7 +2,13 @@
   <Dialog>
     <template v-slot:dialog-title>Register</template>
     <template v-slot:dialog-body>
-      <form @submit.prevent="handleSubmit">
+      <Form
+        :isSuccess="isSuccess"
+        :successMsg="successMsg"
+        :hasError="formHasError"
+        :errorMsg="formHasError && formHasError.message"
+        :handleSubmit="handleSubmit"
+      >
         <TextInput
           :label="'Email'"
           :isRequired="true"
@@ -32,12 +38,7 @@
           :errorMsg="password.errorMsg"
           v-model="password.confirmPassword.value"
         />
-        <div style="text-align: center">
-          <Button :type="'submit'">Submit</Button>
-        </div>
-        <Message v-if="isSuccess" :color="'green'" :text="successMsg" />
-        <Message v-if="formHasError" :color="'red'" :text="formHasError.message" />
-      </form>
+      </Form>
     </template>
   </Dialog>
 </template>
@@ -45,9 +46,8 @@
 <script>
 import firebase from "firebase/app";
 
-import Button from "../../components/Button";
 import Dialog from "../../components/Dialog";
-import Message from "../../components/Message";
+import Form from "../../components/Form";
 import TextInput from "../../components/TextInput";
 
 import { isEmail } from "../../utils/validation";
@@ -55,9 +55,8 @@ import { isEmail } from "../../utils/validation";
 export default {
   name: "Register",
   components: {
-    Button,
     Dialog,
-    Message,
+    Form,
     TextInput
   },
   data() {
