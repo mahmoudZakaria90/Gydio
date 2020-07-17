@@ -28,6 +28,8 @@
           :isRequired="true"
           :isSubmitted="isSubmitted"
           :isValid="matchPassword"
+          :hasError="password.hasError"
+          :errorMsg="password.errorMsg"
           v-model="password.confirmPassword.value"
         />
         <div style="text-align: center">
@@ -63,19 +65,19 @@ export default {
       email: {
         value: "",
         hasError: false,
-        errorMsg: ""
+        errorMsg: "Enter a valid email address."
       },
       password: {
         value: "",
         hasError: false,
-        errorMsg: "",
+        errorMsg: "Please match the 2 password inputs.",
         confirmPassword: {
           value: ""
         }
       },
       isSubmitted: null,
       isSuccess: null,
-      successMsg: "User has been created successfully",
+      successMsg: "User has been created successfully.",
       formHasError: null
     };
   },
@@ -96,11 +98,8 @@ export default {
       this.isSubmitted = true;
       if (this.email.value && !this.isEmail) {
         this.email.hasError = true;
-        this.email.errorMsg = "Enter a valid email address.";
-        return;
       } else {
         this.email.hasError = false;
-        this.email.errorMsg = "";
       }
 
       if (
@@ -109,11 +108,9 @@ export default {
         !this.matchPassword
       ) {
         this.password.hasError = true;
-        this.password.errorMsg = "Please match the 2 password inputs.";
         return;
       } else {
         this.password.hasError = false;
-        this.password.errorMsg = "";
       }
 
       if (this.isEmail && this.matchPassword) {

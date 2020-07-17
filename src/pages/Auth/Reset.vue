@@ -46,7 +46,7 @@ export default {
       email: {
         value: "",
         hasError: false,
-        errorMsg: ""
+        errorMsg: "Enter a valid email address."
       },
       isSubmitted: null,
       isSuccess: null,
@@ -65,11 +65,9 @@ export default {
 
       if (this.email.value && !this.isEmail) {
         this.email.hasError = true;
-        this.email.errorMsg = "Enter a valid email address.";
         return;
       } else {
         this.email.hasError = false;
-        this.email.errorMsg = "";
       }
 
       if (this.email.value) {

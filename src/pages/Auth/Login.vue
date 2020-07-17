@@ -70,7 +70,7 @@ export default {
       email: {
         value: "",
         hasError: false,
-        errorMsg: ""
+        errorMsg: "Enter a valid email address."
       },
       password: {
         value: "",
@@ -79,7 +79,7 @@ export default {
       },
       isSubmitted: null,
       isSuccess: null,
-      successMsg: "User has been Logged in successfully",
+      successMsg: "User has been Logged in successfully.",
       formHasError: null
     };
   },
@@ -94,11 +94,9 @@ export default {
 
       if (this.email.value && !this.isEmail) {
         this.email.hasError = true;
-        this.email.errorMsg = "Enter a valid email address.";
         return;
       } else {
         this.email.hasError = false;
-        this.email.errorMsg = "";
       }
 
       if (this.email.value && this.password.value) {
