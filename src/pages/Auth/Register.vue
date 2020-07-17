@@ -33,7 +33,7 @@
         <div style="text-align: center">
           <Button :type="'submit'">Submit</Button>
         </div>
-        <Message v-if="isSuccess" :color="'green'" :text="'User has been created successfully'" />
+        <Message v-if="isSuccess" :color="'green'" :text="successMsg" />
         <Message v-if="formHasError" :color="'red'" :text="formHasError.message" />
       </form>
     </template>
@@ -75,6 +75,7 @@ export default {
       },
       isSubmitted: null,
       isSuccess: null,
+      successMsg: "User has been created successfully",
       formHasError: null
     };
   },
@@ -96,6 +97,7 @@ export default {
       if (this.email.value && !this.isEmail) {
         this.email.hasError = true;
         this.email.errorMsg = "Enter a valid email address.";
+        return;
       } else {
         this.email.hasError = false;
         this.email.errorMsg = "";
@@ -108,6 +110,7 @@ export default {
       ) {
         this.password.hasError = true;
         this.password.errorMsg = "Please match the 2 password inputs.";
+        return;
       } else {
         this.password.hasError = false;
         this.password.errorMsg = "";
@@ -130,6 +133,7 @@ export default {
           this.formHasError = null;
         } catch (error) {
           this.isSuccess = false;
+          this.isSubmitted = false;
           this.formHasError = error;
         }
       }
