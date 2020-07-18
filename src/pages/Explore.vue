@@ -70,6 +70,7 @@ export default {
         isPlayed: false
       },
       externalTracks: [],
+      allYouTubeVideos: [],
       loadingState: null,
       errorMsg: null
     };
@@ -92,6 +93,16 @@ export default {
       if (this.selectedTrack.isPlayed) {
         this.$refs.audio.pause();
       }
+    });
+    eventBus.$on("allYoutubePlayers", data => {
+      this.allYouTubeVideos.push(data);
+    });
+    eventBus.$on("SelectedYTPlayer", id => {
+      this.allYouTubeVideos.forEach(YTPlayer => {
+        if (YTPlayer.id !== id) {
+          YTPlayer.player.pauseVideo();
+        }
+      });
     });
     this.$refs.audio.onplay = () => {
       this.selectedTrack.isPlayed = true;

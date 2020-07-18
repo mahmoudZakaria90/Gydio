@@ -1,6 +1,6 @@
 <template>
   <div class="col">
-    <div :id="`player${id}`"></div>
+    <div :id="`player${id}`" class="youtube-player"></div>
     <Date :creationDate="creationDate" />
     <User :user="user" />
   </div>
@@ -20,6 +20,11 @@ export default {
     Date,
     User
   },
+  data() {
+    return {
+      isPlayed: false
+    };
+  },
   props: {
     id: String,
     videoId: String,
@@ -30,12 +35,22 @@ export default {
     let player;
     const onReady = () => {
       eventBus.$on("pauseYoutube", () => {
-        player.pauseVideo();
+        if (this.isPlayed) {
+          player.pauseVideo();
+        }
+      });
+      eventBus.$emit("allYoutubePlayers", {
+        id: this.id,
+        player
       });
     };
     const onStateChange = ({ data }) => {
       if (data === 1) {
+        this.isPlayed = true;
         eventBus.$emit("pauseAudio");
+        eventBus.$emit("SelectedYTPlayer", this.id);
+      } else if (data === 2) {
+        this.isPlayed = false;
       }
     };
     YouTubeIframeLoader.load(YT => {
