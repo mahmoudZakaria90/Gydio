@@ -39,16 +39,15 @@ export default {
           player.pauseVideo();
         }
       });
-      eventBus.$emit("allYoutubePlayers", {
-        id: this.id,
-        player
-      });
     };
     const onStateChange = ({ data }) => {
       if (data === 1) {
         this.isPlayed = true;
         eventBus.$emit("pauseAudio");
-        eventBus.$emit("SelectedYTPlayer", this.id);
+        eventBus.$emit("allYoutubePlayers", {
+          id: this.id,
+          player
+        });
       } else if (data === 2) {
         this.isPlayed = false;
       }

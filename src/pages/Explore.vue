@@ -94,16 +94,22 @@ export default {
         this.$refs.audio.pause();
       }
     });
+
     eventBus.$on("allYoutubePlayers", data => {
-      this.allYouTubeVideos.push(data);
+      if (
+        this.allYouTubeVideos.findIndex(player => player.id === data.id) === -1
+      ) {
+        this.allYouTubeVideos.push(data);
+      }
+      if (this.allYouTubeVideos.length > 1) {
+        this.allYouTubeVideos.forEach(YTPlayer => {
+          if (YTPlayer.id !== data.id) {
+            YTPlayer.player.pauseVideo();
+          }
+        });
+      }
     });
-    eventBus.$on("SelectedYTPlayer", id => {
-      this.allYouTubeVideos.forEach(YTPlayer => {
-        if (YTPlayer.id !== id) {
-          YTPlayer.player.pauseVideo();
-        }
-      });
-    });
+
     this.$refs.audio.onplay = () => {
       this.selectedTrack.isPlayed = true;
       eventBus.$emit("pauseYoutube");
