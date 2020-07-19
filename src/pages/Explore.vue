@@ -34,7 +34,6 @@
       </TrackWrapper>
     </div>
     <audio
-      preload="none"
       :src="tracks.selectedTrack.value"
       ref="audio"
       autoplay

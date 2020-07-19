@@ -1,6 +1,10 @@
 <template>
   <div>
     <div v-if="user && !hasError" class="container" style="text-align:center">
+      <p v-if="user.metadata.lastSignInTime">
+        Last sign-in on:
+        <strong>{{user.metadata.lastSignInTime}}</strong>
+      </p>
       <h1>
         <span style="color: lightcoral">{{user.displayName}}</span>'s profile.
       </h1>
@@ -28,29 +32,20 @@ export default {
   data() {
     return {
       user: null,
+      id: this.$route.params.id,
       hasError: false,
       errorMsg: "User is not found (404)"
     };
   },
-  methods: {
-    async getUser() {
-      const { VUE_APP_USERS_ENDPOINT } = process.env;
-      try {
-        const data = await fetch(
-          `${VUE_APP_USERS_ENDPOINT}${this.$route.params.id}`
-        );
-        const user = await data.json();
-        this.user = user;
-      } catch (error) {
-        this.hasError = true;
-      }
+  async mounted() {
+    const { VUE_APP_USERS_ENDPOINT } = process.env;
+    try {
+      const data = await fetch(`${VUE_APP_USERS_ENDPOINT}${this.id}`);
+      const user = await data.json();
+      this.user = user;
+    } catch (error) {
+      this.hasError = true;
     }
-  },
-  mounted() {
-    this.getUser();
-  },
-  updated() {
-    this.getUser();
   }
 };
 </script>

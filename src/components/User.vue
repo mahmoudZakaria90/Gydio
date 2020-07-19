@@ -1,11 +1,7 @@
 <template>
-  <router-link :to="`/profile/${user.uid}`" v-if="user">
-    <img class="user-pic" :src="user.photoUrl" alt />
-    <span>{{user.name}}</span>
-  </router-link>
-  <div v-else>
-    <img class="user-pic" :src="userPlaceholder" alt />
-    <span>Anonymous</span>
+  <div :is="user ? 'router-link' : 'div'" :to="user  ? `/profile/${user.uid}` : null">
+    <img class="user-pic" :src="user ? user.photoUrl : userPlaceholder" alt />
+    <span>{{user ? user.name : 'Anonymous'}}</span>
   </div>
 </template>
 
