@@ -34,7 +34,7 @@
       </TrackWrapper>
     </div>
     <audio
-      :src="tracks.selectedTrack.value"
+      :src="tracks.selectedTrack.downloadUrl"
       ref="audio"
       autoplay
       controls
@@ -67,7 +67,7 @@ export default {
         items: [],
         selectedTrack: {
           id: null,
-          value: null,
+          downloadUrl: null,
           isPlayed: false
         },
         loadingState: "Loading...",
@@ -82,9 +82,9 @@ export default {
     };
   },
   methods: {
-    changeSelectedTrack(id, value) {
+    changeSelectedTrack(id, downloadUrl) {
       this.tracks.selectedTrack.id = id;
-      this.tracks.selectedTrack.value = value;
+      this.tracks.selectedTrack.downloadUrl = downloadUrl;
 
       //Toggling
       if (this.tracks.selectedTrack.isPlayed) {
