@@ -2,7 +2,7 @@
   <label>
     <span class="text-input-label">{{ label }} {{isRequired ? '*' : ''}}</span>
     <Message
-      v-if="isSubmitted && !Boolean(injectedVal)"
+      v-if="isSubmitted && isRequired && !Boolean(injectedVal)"
       :text="'This field is required!'"
       :color="'red'"
       :styleObj="{display: 'inline-block'}"
@@ -10,7 +10,7 @@
     <font-awesome-icon v-if="isValid" :icon="['fas', 'check-circle']" />
     <input
       class="text-input"
-      :class="{hasError: (hasError && !isValid) || (isSubmitted && !Boolean(injectedVal))}"
+      :class="{hasError: (hasError && !isValid) || (isSubmitted && isRequired && !Boolean(injectedVal))}"
       :type="inputType || 'text'"
       :disabled="isDisabled"
       @change="handleOnChange"

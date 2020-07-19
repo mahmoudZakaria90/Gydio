@@ -19,7 +19,7 @@
           id="file_uploader"
           @change="handleFile"
           type="file"
-          :disabled="database.externalLink || storage.isProgress"
+          :disabled="youtube.url || track.isProgress"
           hidden
           :value="null"
         />
@@ -27,11 +27,11 @@
           Choose file
           <font-awesome-icon :icon="['fas', 'plus-circle']" />
         </label>
-        <span>{{ storage.fileName }}</span>
+        <span>{{ track.fileName }}</span>
         <font-awesome-icon
           class="cursor-pointer"
           @click="removeBlob"
-          v-if="storage.blob && storage.fileName && !storage.isProgress"
+          v-if="track.blob && track.fileName && !track.isProgress"
           :icon="['far', 'times-circle']"
         />
         <p>Or</p>
@@ -40,26 +40,25 @@
         <div class="external-link-inner">
           <TextInput
             :label="'Copy/paste an external link e.g. youtube'"
-            :isDisabled="Boolean(storage.blob)"
-            :isValid="database.isValid"
-            :hasError="database.isError"
-            :errorMsg="database.errorMsg"
+            :isDisabled="Boolean(track.blob)"
+            :isValid="youtube.isValid"
+            :hasError="youtube.isError"
+            :errorMsg="youtube.validationErrorMsg"
             :handleOnChange="validateExternalURL"
-            v-model="database.externalLink"
+            v-model="youtube.url"
           />
-          <Message v-if="database.uploadErrorMsg" :color="'red'" :text="database.uploadErrorMsg" />
         </div>
       </div>
-      <div v-if="storage.isProgress" class="progress-outer">
+      <div v-if="track.isProgress" class="progress-outer">
         <Message
-          :text="storage.progressState"
-          :icon="storage.isSuccess ? ['fas', 'check-circle'] : null"
+          :text="track.progressState"
+          :icon="track.isSuccess ? ['fas', 'check-circle'] : null"
           :iconStyle="{color: 'lightgreen'}"
-          :color="storage.isCancelled ? 'red' : null"
+          :color="track.isCancelled ? 'red' : null"
         />
         <div class="progress">
-          <span>{{ storage.progress }}%</span>
-          <span class="progress-inner" :style="{ width: storage.progress + '%' }"></span>
+          <span>{{ track.progress }}%</span>
+          <span class="progress-inner" :style="{ width: track.progress + '%' }"></span>
           <font-awesome-icon
             class="progress-cancel cursor-pointer"
             ref="cancelUploadEl"
@@ -67,9 +66,9 @@
           />
         </div>
         <strong>
-          {{ storage.bytesTransferred / 1000000 +
+          {{ track.bytesTransferred / 1000000 +
           ' / ' +
-          storage.totalBytes / 1000000 +
+          track.totalBytes / 1000000 +
           ' MB'}}
         </strong>
       </div>
@@ -77,21 +76,23 @@
       <div class="uploader-btn-wrap">
         <button
           :disabled="
-            (!storage.blob && !database.externalLink) ||
-              database.isError ||
-              storage.isProgress
+            (!track.blob && !youtube.url) ||
+              youtube.isError ||
+              track.isProgress
           "
-          v-on="{ click: storage.blob ? upload_storage : upload_database }"
+          v-on="{ click: track.blob ? upload_track : upload_youtube }"
         >
           Upload
           <font-awesome-icon :icon="['fas', 'arrow-circle-up']" />
         </button>
         <Message
-          :text="database.progressState"
-          :icon="database.isSuccess ? ['fas', 'check-circle'] : null"
+          :text="youtube.successMsg"
+          :icon="youtube.isSuccess ? ['fas', 'check-circle'] : null"
           :iconStyle="{color: 'lightgreen'}"
-          v-if="database.isSuccess"
+          v-if="youtube.isSuccess"
         />
+        <Message v-if="track.uploadErrorMsg" :color="'red'" :text="track.uploadErrorMsg" />
+        <Message v-if="youtube.uploadErrorMsg" :color="'red'" :text="youtube.uploadErrorMsg" />
       </div>
     </div>
   </div>
@@ -117,23 +118,24 @@ export default {
   },
   data() {
     return {
-      storage: {
+      track: {
         blob: null,
         progress: 0,
         bytesTransferred: 0,
-        totalBytes: 0,
         progressState: null,
+        totalBytes: 0,
         fileName: null,
         isProgress: false,
-        isSuccess: false
-      },
-      database: {
-        externalLink: null,
-        progressState: null,
         isSuccess: false,
+        uploadErrorMsg: null
+      },
+      youtube: {
+        url: null,
+        isSuccess: false,
+        successMsg: `Video url uploaded successfully!`,
         isError: false,
         isValid: false,
-        errorMsg: "You need to input a vaild youtube video URL.",
+        validationErrorMsg: "You need to input a vaild youtube video URL.",
         uploadErrorMsg: null,
         pattern: /^https:\/\/www.youtube.com\/watch\?v=\w+(-)?\w+/g
       }
@@ -148,23 +150,19 @@ export default {
         return;
       }
       const { name } = file;
-      this.storage.blob = file;
-      this.storage.fileName = name;
+      this.track.blob = file;
+      this.track.fileName = name;
     },
-    upload_storage() {
-      //Reset Database states
-      this.database.progressState = null;
-      this.database.isSuccess = false;
-
-      const { name, size } = this.storage.blob;
+    upload_track() {
+      const { name, size } = this.track.blob;
 
       const { auth, storage, firestore } = firebase;
 
       const musicDb = firestore();
       const musicCollection = musicDb.collection("music");
 
-      const storageRef = storage().ref("music/" + name);
-      const task = storageRef.put(this.storage.blob);
+      const trackRef = storage().ref("music/" + name);
+      const task = trackRef.put(this.track.blob);
 
       //For cancelling the uploading
       //Not the most recommended way
@@ -181,20 +179,20 @@ export default {
         snapshot => {
           const { bytesTransferred, totalBytes, state } = snapshot;
           if (state === "running") {
+            this.track.progressState = `Uploading ${name} to Firebase Storage...`;
             const progress = Math.floor((bytesTransferred / totalBytes) * 100);
-            this.storage.progressState = `Uploading ${name} to Firebase storage...`;
-            this.storage.progress = progress;
-            this.storage.bytesTransferred = bytesTransferred;
-            this.storage.totalBytes = totalBytes;
-            this.storage.isProgress = true;
+            this.track.progress = progress;
+            this.track.bytesTransferred = bytesTransferred;
+            this.track.totalBytes = totalBytes;
+            this.track.isProgress = true;
           }
         },
         err => {
-          this.storage.isCancelled = true;
-          this.storage.progressState = err.message;
+          this.track.progressState = err.message;
+          this.track.isCancelled = true;
           //Reset
           this.resetState(
-            "storage",
+            "track",
             [
               { key: "blob", value: null },
               { key: "fileName", value: null },
@@ -217,7 +215,7 @@ export default {
           }
 
           try {
-            const downloadUrl = await storageRef.getDownloadURL();
+            const downloadUrl = await trackRef.getDownloadURL();
             await musicCollection.add(
               MusicModel(
                 name,
@@ -228,19 +226,19 @@ export default {
               )
             );
           } catch (error) {
-            this.uploadErrorMsg = error.message;
+            this.track.uploadErrorMsg = error.message;
           }
 
-          this.storage.progressState = `Uploading is done successfully`;
-          this.storage.isSuccess = true;
+          this.track.isSuccess = true;
+          this.track.progressState = `Uploading is done successfully.`;
 
           //Reset
           this.resetState(
-            "storage",
+            "track",
             [
               { key: "blob", value: null },
-              { key: "isProgress", value: false },
               { key: "fileName", value: null },
+              { key: "isProgress", value: false },
               { key: "isSuccess", value: false }
             ],
             2000
@@ -248,12 +246,7 @@ export default {
         }
       );
     },
-    async upload_database() {
-      //Reset Storage states
-      this.storage.isProgress = false;
-      this.storage.progressState = null;
-      this.storage.isSuccess = false;
-
+    async upload_youtube() {
       const { auth, firestore } = firebase;
       const { currentUser } = auth();
       if (currentUser) {
@@ -267,9 +260,7 @@ export default {
       }
       const youtubeDb = firestore();
       const youtubeCollection = youtubeDb.collection("youtube");
-      const [videoURL] = this.database.externalLink.match(
-        this.database.pattern
-      );
+      const [videoURL] = this.youtube.url.match(this.youtube.pattern);
       let [, videoId] = videoURL.split("watch?v=");
 
       try {
@@ -281,36 +272,35 @@ export default {
           )
         );
       } catch (error) {
-        this.uploadErrorMsg = error.message;
+        this.youtube.uploadErrorMsg = error.message;
       }
-      this.database.progressState = `Video url uploaded successfully!`;
-      this.database.isSuccess = true;
+      this.youtube.isSuccess = true;
 
       //Reset
       this.resetState(
-        "database",
+        "youtube",
         [
           { key: "isError", value: false },
           { key: "isValid", value: false },
           { key: "isSuccess", value: false },
-          { key: "externalLink", value: "" }
+          { key: "url", value: "" }
         ],
         2000,
-        () => eventBus.$emit("resetInput", this.database.externalLink)
+        () => eventBus.$emit("resetInput", this.youtube.url)
       );
     },
     validateExternalURL() {
-      if (!this.database.pattern.test(this.database.externalLink)) {
-        if (!this.database.externalLink) {
-          this.database.isError = false;
+      if (!this.youtube.pattern.test(this.youtube.url)) {
+        if (!this.youtube.url) {
+          this.youtube.isError = false;
           return;
         }
-        this.database.isError = true;
-        this.database.isValid = false;
+        this.youtube.isError = true;
+        this.youtube.isValid = false;
         return;
       }
-      this.database.isError = false;
-      this.database.isValid = true;
+      this.youtube.isError = false;
+      this.youtube.isValid = true;
     },
     resetState(state, options, timeout, cb) {
       setTimeout(() => {
@@ -321,8 +311,8 @@ export default {
       }, timeout);
     },
     removeBlob() {
-      this.storage.blob = null;
-      this.storage.fileName = null;
+      this.track.blob = null;
+      this.track.fileName = null;
     },
     cancelUpload() {}
   },
