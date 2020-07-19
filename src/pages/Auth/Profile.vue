@@ -32,20 +32,28 @@ export default {
   data() {
     return {
       user: null,
-      id: this.$route.params.id,
       hasError: false,
       errorMsg: "User is not found (404)"
     };
   },
-  async mounted() {
-    const { VUE_APP_USERS_ENDPOINT } = process.env;
-    try {
-      const data = await fetch(`${VUE_APP_USERS_ENDPOINT}${this.id}`);
-      const user = await data.json();
-      this.user = user;
-    } catch (error) {
-      this.hasError = true;
+  methods: {
+    async getUser(id) {
+      const { VUE_APP_USERS_ENDPOINT } = process.env;
+      try {
+        const data = await fetch(`${VUE_APP_USERS_ENDPOINT}${id}`);
+        const user = await data.json();
+        this.user = user;
+      } catch (error) {
+        this.hasError = true;
+      }
     }
+  },
+  mounted() {
+    this.getUser(this.$route.params.id);
+  },
+  beforeRouteUpdate(to, from, next) {
+    this.getUser(to.params.id);
+    next();
   }
 };
 </script>
