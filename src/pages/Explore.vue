@@ -1,18 +1,18 @@
 <template>
   <div>
     <div class="container">
-      <h1 v-if="tracks">Explore</h1>
-      <Message v-if="!tracks.length" :text="loadingState"></Message>
-      <Message v-if="errorMsg" :text="errorMsg" :color="'red'" />
+      <h1>Explore</h1>
+      <Message v-if="!tracks.items.length" :text="tracks.loadingState" />
+      <Message v-if="tracks.errorMsg" :text="tracks.errorMsg" :color="'red'" />
       <TrackWrapper :row="true" :basis="'col-4'">
         <Track
-          v-for="({id, data}) in tracks"
+          v-for="({id, data}) in tracks.items"
           :key="id"
           :id="id"
           :name="data.name"
           :creationDate="data.creationDate"
           :downloadUrl="data.downloadUrl"
-          :selected="(id === selectedTrack.id) && selectedTrack.isPlayed"
+          :selected="(id === tracks.selectedTrack.id) && tracks.selectedTrack.isPlayed"
           :user="data.user"
           :changeSelectedTrack="changeSelectedTrack"
         />
@@ -20,10 +20,11 @@
     </div>
     <div class="container">
       <h1>External videos 'Youtube'</h1>
-      <Message v-if="!externalTracks.length" :text="loadingState"></Message>
+      <Message v-if="!youtubeTracks.items.length" :text="youtubeTracks.loadingState" />
+      <Message v-if="youtubeTracks.errorMsg" :text="youtubeTracks.errorMsg" :color="'red'" />
       <TrackWrapper :row="true" :basis="'col-6'">
         <ExternalTrack
-          v-for="({id, data}) in externalTracks"
+          v-for="({id, data}) in youtubeTracks.items"
           :key="id"
           :id="id"
           :creationDate="data.creationDate"
@@ -34,7 +35,7 @@
     </div>
     <audio
       preload="none"
-      :src="selectedTrack.value"
+      :src="tracks.selectedTrack.value"
       ref="audio"
       autoplay
       controls
@@ -63,25 +64,31 @@ export default {
   },
   data() {
     return {
-      tracks: [],
-      selectedTrack: {
-        id: null,
-        value: null,
-        isPlayed: false
+      tracks: {
+        items: [],
+        selectedTrack: {
+          id: null,
+          value: null,
+          isPlayed: false
+        },
+        loadingState: "Loading...",
+        errorMsg: null
       },
-      externalTracks: [],
-      allYouTubeVideos: [],
-      loadingState: null,
-      errorMsg: null
+      youtubeTracks: {
+        items: [],
+        allYouTubePlayers: [],
+        loadingState: "Loading...",
+        errorMsg: null
+      }
     };
   },
   methods: {
     changeSelectedTrack(id, value) {
-      this.selectedTrack.id = id;
-      this.selectedTrack.value = value;
+      this.tracks.selectedTrack.id = id;
+      this.tracks.selectedTrack.value = value;
 
-      //Toggling, not the best practise
-      if (this.selectedTrack.isPlayed) {
+      //Toggling
+      if (this.tracks.selectedTrack.isPlayed) {
         this.$refs.audio.pause();
       } else {
         this.$refs.audio.play();
@@ -90,19 +97,21 @@ export default {
   },
   async mounted() {
     eventBus.$on("pauseAudio", () => {
-      if (this.selectedTrack.isPlayed) {
+      if (this.tracks.selectedTrack.isPlayed) {
         this.$refs.audio.pause();
       }
     });
 
     eventBus.$on("allYoutubePlayers", data => {
       if (
-        this.allYouTubeVideos.findIndex(player => player.id === data.id) === -1
+        this.youtubeTracks.allYouTubePlayers.findIndex(
+          player => player.id === data.id
+        ) === -1
       ) {
-        this.allYouTubeVideos.push(data);
+        this.youtubeTracks.allYouTubePlayers.push(data);
       }
-      if (this.allYouTubeVideos.length > 1) {
-        this.allYouTubeVideos.forEach(YTPlayer => {
+      if (this.youtubeTracks.allYouTubePlayers.length > 1) {
+        this.youtubeTracks.allYouTubePlayers.forEach(YTPlayer => {
           if (YTPlayer.id !== data.id) {
             YTPlayer.player.pauseVideo();
           }
@@ -111,16 +120,17 @@ export default {
     });
 
     this.$refs.audio.onplay = () => {
-      this.selectedTrack.isPlayed = true;
+      this.tracks.selectedTrack.isPlayed = true;
       eventBus.$emit("pauseYoutube");
     };
     this.$refs.audio.onpause = () => {
-      this.selectedTrack.isPlayed = false;
+      this.tracks.selectedTrack.isPlayed = false;
     };
-    this.loadingState = "Loading...";
+
     const { firestore } = firebase;
     const db = firestore();
 
+    //Tracks
     try {
       const { docs } = await db
         .collection("music")
@@ -130,27 +140,32 @@ export default {
         id: doc.id,
         data: doc.data()
       }));
-      this.tracks = tracks;
+      this.tracks.items = tracks;
     } catch (error) {
-      this.errorMsg = error.message;
+      this.tracks.errorMsg = error.message;
     }
 
+    //Youtube videos
     try {
-      //External videos
       const { docs } = await db
         .collection("youtube")
         .orderBy("creationDate", "desc")
         .get();
-      const externalTracks = docs.map(doc => ({
+      const youtubeTracks = docs.map(doc => ({
         id: doc.id,
         data: doc.data()
       }));
-      this.externalTracks = externalTracks;
+      this.youtubeTracks.items = youtubeTracks;
     } catch (error) {
-      this.errorMsg = error.message;
+      this.youtubeTracks.errorMsg = error.message;
     }
-    if (!this.tracks.length && !this.externalTracks.length) {
-      this.loadingState = "No files to explore!";
+    if (!this.tracks.items.length || !this.youtubeTracks.items.length) {
+      if (!this.tracks.items.length) {
+        this.tracks.loadingState = "No files to explore!";
+      }
+      if (!this.youtubeTracks.items.length) {
+        this.youtubeTracks.loadingState = "No videos to explore!";
+      }
     }
   }
 };
