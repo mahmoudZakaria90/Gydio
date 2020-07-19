@@ -10,6 +10,8 @@ import Profile from './pages/Auth/Profile';
 
 Vue.use(VueRouter);
 
+const TITLE = 'Gydio - ';
+
 const routes = [
     { path: '/', component: Uploader, name: 'Uploader' },
     { path: '/explore', component: Explore, name: 'Explore' },
@@ -17,8 +19,16 @@ const routes = [
     { path: '/login', component: Login, name: 'Login' },
     { path: '/reset', component: Reset, name: 'Reset' },
     { path: '/profile/:id', component: Profile, name: 'Profile' }
-]
+];
 
-export default new VueRouter({
+const router = new VueRouter({
     routes
 })
+
+
+router.beforeEach((to, from, next) => {
+    document.title = TITLE + to.name;
+    next()
+})
+
+export default router
