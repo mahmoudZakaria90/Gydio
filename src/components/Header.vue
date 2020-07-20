@@ -14,14 +14,10 @@
           </li>
         </ul>
         <ul class="nav-right" v-else>
-          <li v-if="user.email && !user.displayName">
-            Welcome back,
-            <strong>{{emailUsername}}</strong>
-          </li>
-          <li v-else-if="user.displayName">
+          <li>
             Welcome back,
             <router-link :to="`/profile/${user.uid}`">
-              <strong>{{firstName}}</strong>
+              <strong>{{firstName || emailUsername}}</strong>
             </router-link>
           </li>
           <li class="nav-right-img" v-if="user.photoURL">
