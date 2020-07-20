@@ -7,7 +7,7 @@
       :color="'red'"
       :styleObj="{display: 'inline-block'}"
     />
-    <font-awesome-icon v-if="isValid" :icon="['fas', 'check-circle']" />
+    <font-awesome-icon class="text-input-icon" v-if="isValid" :icon="['fas', 'check-circle']" />
     <input
       class="text-input"
       :class="{hasError: (hasError && !isValid) || (isSubmitted && isRequired && !Boolean(injectedVal))}"
@@ -73,9 +73,11 @@ export default {
   width: 100%
   margin-top: 5px
   margin-bottom: 20px
+  &-icon
+    margin-left: 0
   &-label
     font-size: 20px
-    margin-right: 20px
+    margin-right: 10px
   &.hasError
     border-color: red
 </style>

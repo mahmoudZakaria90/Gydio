@@ -6,7 +6,7 @@
         <strong>{{user.metadata.lastSignInTime}}</strong>
       </p>
       <h1>
-        <span style="color: lightcoral">{{user.displayName}}</span>'s profile.
+        <span style="color: lightcoral">{{user.displayName || user.email}}</span>'s profile.
       </h1>
       <div style="margin-bottom: 10px">
         <img :src="user.photoURL" alt />

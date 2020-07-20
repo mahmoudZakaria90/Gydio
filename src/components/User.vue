@@ -1,6 +1,6 @@
 <template>
   <div :is="user ? 'router-link' : 'div'" :to="user  ? `/profile/${user.uid}` : null">
-    <img class="user-pic" :src="user ? user.photoUrl : userPlaceholder" alt />
+    <img class="user-pic" :src="user ? user.photoUrl || userPlaceholder : userPlaceholder" alt />
     <span>{{user ? user.name : 'Anonymous'}}</span>
   </div>
 </template>

@@ -213,7 +213,7 @@ export default {
               metadata: { lastSignInTime }
             } = currentUser;
           }
-
+          const userName = displayName ? displayName : email;
           try {
             const downloadUrl = await trackRef.getDownloadURL();
             await musicCollection.add(
@@ -222,7 +222,7 @@ export default {
                 size,
                 downloadUrl,
                 currentUser &&
-                  UserModel(uid, displayName, photoURL, email, lastSignInTime)
+                  UserModel(uid, userName, photoURL, email, lastSignInTime)
               )
             );
           } catch (error) {
@@ -258,6 +258,7 @@ export default {
           metadata: { lastSignInTime }
         } = currentUser;
       }
+      const userName = displayName ? displayName : email;
       const youtubeDb = firestore();
       const youtubeCollection = youtubeDb.collection("youtube");
       const [videoURL] = this.youtube.url.match(this.youtube.pattern);
@@ -268,7 +269,7 @@ export default {
           YoutubeModel(
             videoId,
             currentUser &&
-              UserModel(uid, displayName, photoURL, email, lastSignInTime)
+              UserModel(uid, userName, photoURL, email, lastSignInTime)
           )
         );
       } catch (error) {
