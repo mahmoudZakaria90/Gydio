@@ -23,16 +23,23 @@ export default {
 </script>
 
 <style lang="sass" scoped>
+.row
+    margin-left: -15px
+    margin-right: -15px
+    display: flex
+    flex-wrap: wrap
+    flex-grow: 1
+
+.col
+    padding: 0 15px
+    max-width: 100%
+    margin-bottom: 30px
+    &:last-of-type
+        margin-bottom: 85px
+
 .flex-wrapper
     display: flex
     flex-wrap: wrap
-    & .col
-        padding: 0 15px
-        max-width: 100%
-    & .row
-        flex-grow: 1
-    &.container
-        margin: 0 auto
     &.col-1
         & .col
             flex-basis: 8.333333%
