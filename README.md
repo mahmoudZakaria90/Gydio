@@ -5,6 +5,9 @@ Your favorite place for Gaming/Cartoon related Music, Themes and Soundtracks.
 
 * Creating/using a Music identifier e.g ShazamAPIs.
 
+# Live
+https://mahmoudzakaria90.github.io/Gydio/dist/#/
+
 # Development
 
 ## Project setup
