@@ -1,4 +1,11 @@
 # Gydio
+Your favorite place for Gaming/Cartoon related Music, Themes and Soundtracks.
+
+# Upcoming
+
+* Creating/using a Music identifier e.g ShazamAPIs.
+
+# Development
 
 ## Project setup
 ```
