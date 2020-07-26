@@ -1,5 +1,6 @@
 <template>
   <div>
+    <Loading v-if="isLoading" :text="'Fetching user...'" />
     <div v-if="user && !hasError" class="container" style="text-align:center">
       <p v-if="user.metadata.lastSignInTime">
         Last sign-in on:
@@ -16,22 +17,24 @@
         {{user.email}}
       </div>
     </div>
-    <div class="container">
-      <Message v-if="hasError" :color="'red'" :text="errorMsg" />
-    </div>
+    <Message v-if="hasError" :color="'red'" :text="errorMsg" />
   </div>
 </template>
 
 <script>
 import Message from "../../components/Message";
+import Loading from "../../components/Loading";
+
 export default {
   name: "Profile",
   components: {
-    Message
+    Message,
+    Loading
   },
   data() {
     return {
       user: null,
+      isLoading: true,
       hasError: false,
       errorMsg: "User is not found (404)"
     };
@@ -45,6 +48,8 @@ export default {
         this.user = user;
       } catch (error) {
         this.hasError = true;
+      } finally {
+        this.isLoading = false;
       }
     }
   },
