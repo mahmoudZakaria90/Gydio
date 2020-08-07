@@ -1,3 +1,3 @@
 module.exports = {
-  publicPath: process.env.NODE_ENV === "production" ? "/Gydio/dist/" : "",
+  publicPath: process.env.NODE_ENV === "production" ? "/gydio/dist/" : "",
 };
