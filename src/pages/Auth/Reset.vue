@@ -24,39 +24,39 @@
 </template>
 
 <script>
-import firebase from "firebase/app";
+import firebase from 'firebase/app';
 
-import { eventBus } from "../../utils/bus";
-import { isEmail } from "../../utils/validation";
+import { eventBus } from '../../utils/bus';
+import { isEmail } from '../../utils/validation';
 
-import Dialog from "../../components/Dialog";
-import Form from "../../components/Form";
-import TextInput from "../../components/TextInput";
+import Dialog from '../../components/Dialog';
+import Form from '../../components/Form';
+import TextInput from '../../components/TextInput';
 
 export default {
-  name: "Login",
+  name: 'Login',
   components: {
     Dialog,
     Form,
-    TextInput
+    TextInput,
   },
   data() {
     return {
       email: {
-        value: "",
+        value: '',
         hasError: false,
-        errorMsg: "Enter a valid email address."
+        errorMsg: 'Enter a valid email address.',
       },
       isSubmitted: null,
       isSuccess: null,
-      successMsg: "A reset password email has been sent to your inbox.",
-      formHasError: null
+      successMsg: 'A reset password email has been sent to your inbox.',
+      formHasError: null,
     };
   },
   computed: {
     isEmail() {
       return isEmail(this.email.value);
-    }
+    },
   },
   methods: {
     async handleSubmit() {
@@ -75,19 +75,18 @@ export default {
           this.isSuccess = true;
           this.formHasError = null;
           setTimeout(() => {
-            this.$router.push("/login");
+            this.$router.push('/login');
           }, 3000);
         } catch (error) {
           this.formHasError = error;
           this.isSuccess = false;
           this.isSubmitted = false;
-          eventBus.$emit("resetInput", "");
+          eventBus.$emit('resetInput', '');
         }
       }
-    }
-  }
+    },
+  },
 };
 </script>
 
-<style lang="sass" scoped>
-</style>
+<style lang="sass" scoped></style>

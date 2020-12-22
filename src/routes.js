@@ -13,22 +13,21 @@ Vue.use(VueRouter);
 const TITLE = 'Gydio - ';
 
 const routes = [
-    { path: '/', component: Uploader, name: 'Uploader' },
-    { path: '/explore', component: Explore, name: 'Explore' },
-    { path: '/register', component: Register, name: 'Register' },
-    { path: '/login', component: Login, name: 'Login' },
-    { path: '/reset', component: Reset, name: 'Reset' },
-    { path: '/profile/:id', component: Profile, name: 'Profile' }
+  { path: '/', component: Uploader, name: 'Uploader' },
+  { path: '/explore', component: Explore, name: 'Explore' },
+  { path: '/register', component: Register, name: 'Register' },
+  { path: '/login', component: Login, name: 'Login' },
+  { path: '/reset', component: Reset, name: 'Reset' },
+  { path: '/profile/:id', component: Profile, name: 'Profile' },
 ];
 
 const router = new VueRouter({
-    routes
-})
-
+  routes,
+});
 
 router.beforeEach((to, from, next) => {
-    document.title = TITLE + to.name;
-    next()
-})
+  document.title = TITLE + to.name;
+  next();
+});
 
-export default router
+export default router;

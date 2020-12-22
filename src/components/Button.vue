@@ -1,21 +1,29 @@
 <template>
   <button
     :class="[iconPosition, variant]"
-    :style="{styleObj}"
+    :style="{ styleObj }"
     :text="text"
     :disabled="isDisabled"
     :type="type"
     @click="handleClick"
   >
-    <font-awesome-icon v-if="icon &&  iconPosition !== 'right'" :icon="icon" :style="iconStyle" />
+    <font-awesome-icon
+      v-if="icon && iconPosition !== 'right'"
+      :icon="icon"
+      :style="iconStyle"
+    />
     <slot></slot>
-    <font-awesome-icon v-if="icon && iconPosition === 'right'" :icon="icon" :style="iconStyle" />
+    <font-awesome-icon
+      v-if="icon && iconPosition === 'right'"
+      :icon="icon"
+      :style="iconStyle"
+    />
   </button>
 </template>
 
 <script>
 export default {
-  name: "Button",
+  name: 'Button',
   props: {
     styleObj: Object,
     variant: String,
@@ -24,15 +32,15 @@ export default {
     icon: Array,
     iconStyle: Object,
     iconPosition: {
-      default: "left",
-      type: String
+      type: String,
+      default: 'left',
     },
     isDisabled: Boolean,
     handleClick: {
       type: Function,
-      default: () => {}
-    }
-  }
+      default: () => {},
+    },
+  },
 };
 </script>
 

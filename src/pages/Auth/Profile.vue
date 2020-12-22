@@ -4,17 +4,20 @@
     <div v-if="user && !hasError" class="container" style="text-align:center">
       <p v-if="user.metadata.lastSignInTime">
         Last sign-in on:
-        <strong>{{user.metadata.lastSignInTime}}</strong>
+        <strong>{{ user.metadata.lastSignInTime }}</strong>
       </p>
       <h1>
-        <span style="color: lightcoral">{{user.displayName || user.email}}</span>'s profile.
+        <span style="color: lightcoral">{{
+          user.displayName || user.email
+        }}</span
+        >'s profile.
       </h1>
       <div style="margin-bottom: 10px">
         <img :src="user.photoURL" alt />
       </div>
       <div>
         <h1>Email</h1>
-        {{user.email}}
+        {{ user.email }}
       </div>
     </div>
     <Message v-if="hasError" :color="'red'" :text="errorMsg" />
@@ -22,21 +25,21 @@
 </template>
 
 <script>
-import Message from "../../components/Message";
-import Loading from "../../components/Loading";
+import Message from '../../components/Message';
+import Loading from '../../components/Loading';
 
 export default {
-  name: "Profile",
+  name: 'Profile',
   components: {
     Message,
-    Loading
+    Loading,
   },
   data() {
     return {
       user: null,
       isLoading: true,
       hasError: false,
-      errorMsg: "User is not found (404)"
+      errorMsg: 'User is not found (404)',
     };
   },
   methods: {
@@ -51,7 +54,7 @@ export default {
       } finally {
         this.isLoading = false;
       }
-    }
+    },
   },
   mounted() {
     this.getUser(this.$route.params.id);
@@ -59,7 +62,7 @@ export default {
   beforeRouteUpdate(to, from, next) {
     this.getUser(to.params.id);
     next();
-  }
+  },
 };
 </script>
 

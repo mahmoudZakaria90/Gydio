@@ -10,20 +10,20 @@
 </template>
 
 <script>
-import Message from "./Message";
+import Message from './Message';
 
 export default {
-  name: "Form",
+  name: 'Form',
   components: {
-    Message
+    Message,
   },
   props: {
     isSuccess: Boolean,
     successMsg: String,
     hasError: Object,
     errorMsg: String,
-    handleSubmit: Function
-  }
+    handleSubmit: Function,
+  },
 };
 </script>
 

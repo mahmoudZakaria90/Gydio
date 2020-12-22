@@ -53,12 +53,15 @@
         <Message
           :text="track.progressState"
           :icon="track.isSuccess ? ['fas', 'check-circle'] : null"
-          :iconStyle="{color: 'lightgreen'}"
+          :iconStyle="{ color: 'lightgreen' }"
           :color="track.isCancelled ? 'red' : null"
         />
         <div class="progress">
           <span>{{ track.progress }}%</span>
-          <span class="progress-inner" :style="{ width: track.progress + '%' }"></span>
+          <span
+            class="progress-inner"
+            :style="{ width: track.progress + '%' }"
+          ></span>
           <font-awesome-icon
             class="progress-cancel cursor-pointer"
             ref="cancelUploadEl"
@@ -66,19 +69,19 @@
           />
         </div>
         <strong>
-          {{ track.bytesTransferred / 1000000 +
-          ' / ' +
-          track.totalBytes / 1000000 +
-          ' MB'}}
+          {{
+            track.bytesTransferred / 1000000 +
+              ' / ' +
+              track.totalBytes / 1000000 +
+              ' MB'
+          }}
         </strong>
       </div>
 
       <div class="uploader-btn-wrap">
         <button
           :disabled="
-            (!track.blob && !youtube.url) ||
-              youtube.isError ||
-              track.isProgress
+            (!track.blob && !youtube.url) || youtube.isError || track.isProgress
           "
           v-on="{ click: track.blob ? upload_track : upload_youtube }"
         >
@@ -88,33 +91,41 @@
         <Message
           :text="youtube.successMsg"
           :icon="youtube.isSuccess ? ['fas', 'check-circle'] : null"
-          :iconStyle="{color: 'lightgreen'}"
+          :iconStyle="{ color: 'lightgreen' }"
           v-if="youtube.isSuccess"
         />
-        <Message v-if="track.uploadErrorMsg" :color="'red'" :text="track.uploadErrorMsg" />
-        <Message v-if="youtube.uploadErrorMsg" :color="'red'" :text="youtube.uploadErrorMsg" />
+        <Message
+          v-if="track.uploadErrorMsg"
+          :color="'red'"
+          :text="track.uploadErrorMsg"
+        />
+        <Message
+          v-if="youtube.uploadErrorMsg"
+          :color="'red'"
+          :text="youtube.uploadErrorMsg"
+        />
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import firebase from "firebase/app";
+import firebase from 'firebase/app';
 
-import Message from "../components/Message";
-import TextInput from "../components/TextInput";
+import Message from '../components/Message';
+import TextInput from '../components/TextInput';
 
-import MusicModel from "../models/Music";
-import UserModel from "../models/User";
-import YoutubeModel from "../models/Youtube";
+import MusicModel from '../models/Music';
+import UserModel from '../models/User';
+import YoutubeModel from '../models/Youtube';
 
-import { eventBus } from "../utils/bus";
+import { eventBus } from '../utils/bus';
 
 export default {
-  name: "Uploader",
+  name: 'Uploader',
   components: {
     Message,
-    TextInput
+    TextInput,
   },
   data() {
     return {
@@ -127,7 +138,7 @@ export default {
         fileName: null,
         isProgress: false,
         isSuccess: false,
-        uploadErrorMsg: null
+        uploadErrorMsg: null,
       },
       youtube: {
         url: null,
@@ -135,10 +146,10 @@ export default {
         successMsg: `Video url uploaded successfully!`,
         isError: false,
         isValid: false,
-        validationErrorMsg: "You need to input a vaild youtube video URL.",
+        validationErrorMsg: 'You need to input a vaild youtube video URL.',
         uploadErrorMsg: null,
-        pattern: /^https:\/\/www.youtube.com\/watch\?v=\w+(-)?\w+/g
-      }
+        pattern: /^https:\/\/www.youtube.com\/watch\?v=\w+(-)?\w+/g,
+      },
     };
   },
   methods: {
@@ -159,26 +170,26 @@ export default {
       const { auth, storage, firestore } = firebase;
 
       const musicDb = firestore();
-      const musicCollection = musicDb.collection("music");
+      const musicCollection = musicDb.collection('music');
 
-      const trackRef = storage().ref("music/" + name);
+      const trackRef = storage().ref('music/' + name);
       const task = trackRef.put(this.track.blob);
 
       //For cancelling the uploading
       //Not the most recommended way
       this.cancelUpload = () => {
         if (this.$refs.cancelUploadEl) {
-          this.$refs.cancelUploadEl.addEventListener("click", () =>
+          this.$refs.cancelUploadEl.addEventListener('click', () =>
             task.cancel()
           );
         }
       };
 
       task.on(
-        "state_changed",
+        'state_changed',
         snapshot => {
           const { bytesTransferred, totalBytes, state } = snapshot;
-          if (state === "running") {
+          if (state === 'running') {
             this.track.progressState = `Uploading ${name} to Firebase Storage...`;
             const progress = Math.floor((bytesTransferred / totalBytes) * 100);
             this.track.progress = progress;
@@ -192,12 +203,12 @@ export default {
           this.track.isCancelled = true;
           //Reset
           this.resetState(
-            "track",
+            'track',
             [
-              { key: "blob", value: null },
-              { key: "fileName", value: null },
-              { key: "isProgress", value: false },
-              { key: "isCancelled", value: false }
+              { key: 'blob', value: null },
+              { key: 'fileName', value: null },
+              { key: 'isProgress', value: false },
+              { key: 'isCancelled', value: false },
             ],
             2000
           );
@@ -210,7 +221,7 @@ export default {
               displayName,
               photoURL,
               email,
-              metadata: { lastSignInTime }
+              metadata: { lastSignInTime },
             } = currentUser;
           }
           const userName = displayName ? displayName : email;
@@ -234,12 +245,12 @@ export default {
 
           //Reset
           this.resetState(
-            "track",
+            'track',
             [
-              { key: "blob", value: null },
-              { key: "fileName", value: null },
-              { key: "isProgress", value: false },
-              { key: "isSuccess", value: false }
+              { key: 'blob', value: null },
+              { key: 'fileName', value: null },
+              { key: 'isProgress', value: false },
+              { key: 'isSuccess', value: false },
             ],
             2000
           );
@@ -255,14 +266,14 @@ export default {
           displayName,
           email,
           photoURL,
-          metadata: { lastSignInTime }
+          metadata: { lastSignInTime },
         } = currentUser;
       }
       const userName = displayName ? displayName : email;
       const youtubeDb = firestore();
-      const youtubeCollection = youtubeDb.collection("youtube");
+      const youtubeCollection = youtubeDb.collection('youtube');
       const [videoURL] = this.youtube.url.match(this.youtube.pattern);
-      let [, videoId] = videoURL.split("watch?v=");
+      let [, videoId] = videoURL.split('watch?v=');
 
       try {
         await youtubeCollection.add(
@@ -279,15 +290,15 @@ export default {
 
       //Reset
       this.resetState(
-        "youtube",
+        'youtube',
         [
-          { key: "isError", value: false },
-          { key: "isValid", value: false },
-          { key: "isSuccess", value: false },
-          { key: "url", value: "" }
+          { key: 'isError', value: false },
+          { key: 'isValid', value: false },
+          { key: 'isSuccess', value: false },
+          { key: 'url', value: '' },
         ],
         2000,
-        () => eventBus.$emit("resetInput", this.youtube.url)
+        () => eventBus.$emit('resetInput', this.youtube.url)
       );
     },
     validateExternalURL() {
@@ -315,11 +326,11 @@ export default {
       this.track.blob = null;
       this.track.fileName = null;
     },
-    cancelUpload() {}
+    cancelUpload() {},
   },
   updated() {
     this.cancelUpload();
-  }
+  },
 };
 </script>
 

@@ -17,7 +17,7 @@
           <li>
             Welcome back,
             <router-link :to="`/profile/${user.uid}`">
-              <strong>{{firstName || emailUsername}}</strong>
+              <strong>{{ firstName || emailUsername }}</strong>
             </router-link>
           </li>
           <li class="nav-right-img" v-if="user.photoURL">
@@ -33,16 +33,16 @@
 </template>
 
 <script>
-import firebase from "firebase/app";
+import firebase from 'firebase/app';
 
 export default {
-  name: "Header",
+  name: 'Header',
   data() {
     return {
       user: null,
       firstName: null,
       emailUsername: null,
-      isAuthenticated: false
+      isAuthenticated: false,
     };
   },
   methods: {
@@ -51,21 +51,21 @@ export default {
     },
     stepBackward() {
       this.$router.go(-1);
-    }
+    },
   },
   mounted() {
     firebase.auth().onAuthStateChanged(user => {
       if (user) {
         this.user = user;
-        const emailUsername = user.email && user.email.split("@")[0];
-        const firstName = user.displayName && user.displayName.split(" ")[0];
+        const emailUsername = user.email && user.email.split('@')[0];
+        const firstName = user.displayName && user.displayName.split(' ')[0];
         this.firstName = firstName;
         this.emailUsername = emailUsername;
         return;
       }
       this.user = null;
     });
-  }
+  },
 };
 </script>
 

@@ -1,7 +1,7 @@
 <template>
   <div class="loading-overlay">
     <div class="loading-body">
-      <p>{{text}}</p>
+      <p>{{ text }}</p>
       <font-awesome-icon class="loading-icon" :icon="['fas', 'cog']" />
     </div>
   </div>
@@ -9,10 +9,10 @@
 
 <script>
 export default {
-  name: "Loading",
+  name: 'Loading',
   props: {
-    text: String
-  }
+    text: String,
+  },
 };
 </script>
 

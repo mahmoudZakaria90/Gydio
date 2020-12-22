@@ -1,15 +1,15 @@
 <template>
   <div class="track-date">
     <strong>Uploaded:</strong>
-    {{dateTimeFormatted}}
+    {{ dateTimeFormatted }}
   </div>
 </template>
 
 <script>
 export default {
-  name: "Date",
+  name: 'Date',
   props: {
-    creationDate: Number
+    creationDate: Number,
   },
   computed: {
     dateTimeFormatted() {
@@ -17,8 +17,8 @@ export default {
       const dateFormatted = date.toDateString();
       const timeFormatted = date.toLocaleTimeString();
       return `${dateFormatted}, ${timeFormatted}`;
-    }
-  }
+    },
+  },
 };
 </script>
 

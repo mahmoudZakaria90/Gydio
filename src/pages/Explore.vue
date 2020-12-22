@@ -6,13 +6,15 @@
       <Message v-if="tracks.errorMsg" :text="tracks.errorMsg" :color="'red'" />
       <TrackWrapper :row="true" :basis="'col-4'">
         <Track
-          v-for="({id, data}) in tracks.items"
+          v-for="{ id, data } in tracks.items"
           :key="id"
           :id="id"
           :name="data.name"
           :creationDate="data.creationDate"
           :downloadUrl="data.downloadUrl"
-          :selected="(id === tracks.selectedTrack.id) && tracks.selectedTrack.isPlayed"
+          :selected="
+            id === tracks.selectedTrack.id && tracks.selectedTrack.isPlayed
+          "
           :user="data.user"
           :changeSelectedTrack="changeSelectedTrack"
         />
@@ -20,11 +22,18 @@
     </div>
     <div class="container">
       <h1>External videos 'Youtube'</h1>
-      <Message v-if="!youtubeTracks.items.length" :text="youtubeTracks.loadingState" />
-      <Message v-if="youtubeTracks.errorMsg" :text="youtubeTracks.errorMsg" :color="'red'" />
+      <Message
+        v-if="!youtubeTracks.items.length"
+        :text="youtubeTracks.loadingState"
+      />
+      <Message
+        v-if="youtubeTracks.errorMsg"
+        :text="youtubeTracks.errorMsg"
+        :color="'red'"
+      />
       <TrackWrapper :row="true" :basis="'col-6'">
         <ExternalTrack
-          v-for="({id, data}) in youtubeTracks.items"
+          v-for="{ id, data } in youtubeTracks.items"
           :key="id"
           :id="id"
           :creationDate="data.creationDate"
@@ -44,22 +53,22 @@
 </template>
 
 <script>
-import firebase from "firebase/app";
-import { eventBus } from "../utils/bus";
+import firebase from 'firebase/app';
+import { eventBus } from '../utils/bus';
 
-import TrackWrapper from "../components/Track/Wrapper";
-import Track from "../components/Track/Track";
-import ExternalTrack from "../components/Track/ExternalTrack";
+import TrackWrapper from '../components/Track/Wrapper';
+import Track from '../components/Track/Track';
+import ExternalTrack from '../components/Track/ExternalTrack';
 
-import Message from "../components/Message";
+import Message from '../components/Message';
 
 export default {
-  name: "Explore",
+  name: 'Explore',
   components: {
     Track,
     TrackWrapper,
     ExternalTrack,
-    Message
+    Message,
   },
   data() {
     return {
@@ -68,17 +77,17 @@ export default {
         selectedTrack: {
           id: null,
           downloadUrl: null,
-          isPlayed: false
+          isPlayed: false,
         },
-        loadingState: "Loading...",
-        errorMsg: null
+        loadingState: 'Loading...',
+        errorMsg: null,
       },
       youtubeTracks: {
         items: [],
         allYouTubePlayers: [],
-        loadingState: "Loading...",
-        errorMsg: null
-      }
+        loadingState: 'Loading...',
+        errorMsg: null,
+      },
     };
   },
   methods: {
@@ -92,16 +101,16 @@ export default {
       } else {
         this.$refs.audio.play();
       }
-    }
+    },
   },
   async mounted() {
-    eventBus.$on("pauseAudio", () => {
+    eventBus.$on('pauseAudio', () => {
       if (this.tracks.selectedTrack.isPlayed) {
         this.$refs.audio.pause();
       }
     });
 
-    eventBus.$on("allYoutubePlayers", data => {
+    eventBus.$on('allYoutubePlayers', data => {
       if (
         this.youtubeTracks.allYouTubePlayers.findIndex(
           player => player.id === data.id
@@ -120,7 +129,7 @@ export default {
 
     this.$refs.audio.onplay = () => {
       this.tracks.selectedTrack.isPlayed = true;
-      eventBus.$emit("pauseYoutube");
+      eventBus.$emit('pauseYoutube');
     };
     this.$refs.audio.onpause = () => {
       this.tracks.selectedTrack.isPlayed = false;
@@ -132,12 +141,12 @@ export default {
     //Tracks
     try {
       const { docs } = await db
-        .collection("music")
-        .orderBy("creationDate", "desc")
+        .collection('music')
+        .orderBy('creationDate', 'desc')
         .get();
       const tracks = docs.map(doc => ({
         id: doc.id,
-        data: doc.data()
+        data: doc.data(),
       }));
       this.tracks.items = tracks;
     } catch (error) {
@@ -147,12 +156,12 @@ export default {
     //Youtube videos
     try {
       const { docs } = await db
-        .collection("youtube")
-        .orderBy("creationDate", "desc")
+        .collection('youtube')
+        .orderBy('creationDate', 'desc')
         .get();
       const youtubeTracks = docs.map(doc => ({
         id: doc.id,
-        data: doc.data()
+        data: doc.data(),
       }));
       this.youtubeTracks.items = youtubeTracks;
     } catch (error) {
@@ -160,13 +169,13 @@ export default {
     }
     if (!this.tracks.items.length || !this.youtubeTracks.items.length) {
       if (!this.tracks.items.length) {
-        this.tracks.loadingState = "No files to explore!";
+        this.tracks.loadingState = 'No files to explore!';
       }
       if (!this.youtubeTracks.items.length) {
-        this.youtubeTracks.loadingState = "No videos to explore!";
+        this.youtubeTracks.loadingState = 'No videos to explore!';
       }
     }
-  }
+  },
 };
 </script>
 

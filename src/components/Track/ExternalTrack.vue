@@ -7,34 +7,34 @@
 </template>
 
 <script>
-import YouTubeIframeLoader from "youtube-iframe";
+import YouTubeIframeLoader from 'youtube-iframe';
 
-import Date from "../Date";
-import User from "../User";
+import Date from '../Date';
+import User from '../User';
 
-import { eventBus } from "../../utils/bus";
+import { eventBus } from '../../utils/bus';
 
 export default {
-  name: "ExternalTrack",
+  name: 'ExternalTrack',
   components: {
     Date,
-    User
+    User,
   },
   data() {
     return {
-      isPlayed: false
+      isPlayed: false,
     };
   },
   props: {
     id: String,
     videoId: String,
     user: Object,
-    creationDate: Number
+    creationDate: Number,
   },
   mounted() {
     let player;
     const onReady = () => {
-      eventBus.$on("pauseYoutube", () => {
+      eventBus.$on('pauseYoutube', () => {
         if (this.isPlayed) {
           player.pauseVideo();
         }
@@ -43,10 +43,10 @@ export default {
     const onStateChange = ({ data }) => {
       if (data === 1) {
         this.isPlayed = true;
-        eventBus.$emit("pauseAudio");
-        eventBus.$emit("allYoutubePlayers", {
+        eventBus.$emit('pauseAudio');
+        eventBus.$emit('allYoutubePlayers', {
           id: this.id,
-          player
+          player,
         });
       } else if (data === 2) {
         this.isPlayed = false;
@@ -54,16 +54,16 @@ export default {
     };
     YouTubeIframeLoader.load(YT => {
       player = new YT.Player(`player${this.id}`, {
-        height: "400",
-        width: "100%",
+        height: '400',
+        width: '100%',
         videoId: this.videoId,
         events: {
           onReady,
-          onStateChange
-        }
+          onStateChange,
+        },
       });
     });
-  }
+  },
 };
 </script>
 

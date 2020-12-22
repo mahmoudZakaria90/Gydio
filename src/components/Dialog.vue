@@ -14,7 +14,7 @@
 
 <script>
 export default {
-  name: "Dialog"
+  name: 'Dialog',
 };
 </script>
 

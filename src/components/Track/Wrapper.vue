@@ -1,8 +1,8 @@
 <template>
   <div
     class="flex-wrapper"
-    :style="container && {'max-width': container + 'px'}"
-    :class="[basis, {container}]"
+    :style="container && { 'max-width': container + 'px' }"
+    :class="[basis, { container }]"
   >
     <div v-if="row" class="row">
       <slot></slot>
@@ -13,12 +13,12 @@
 
 <script>
 export default {
-  name: "Wrapper",
+  name: 'Wrapper',
   props: {
     basis: String,
     row: Boolean,
-    container: Number
-  }
+    container: Number,
+  },
 };
 </script>
 

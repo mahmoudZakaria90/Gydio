@@ -44,40 +44,40 @@
 </template>
 
 <script>
-import firebase from "firebase/app";
+import firebase from 'firebase/app';
 
-import Dialog from "../../components/Dialog";
-import Form from "../../components/Form";
-import TextInput from "../../components/TextInput";
+import Dialog from '../../components/Dialog';
+import Form from '../../components/Form';
+import TextInput from '../../components/TextInput';
 
-import { isEmail } from "../../utils/validation";
+import { isEmail } from '../../utils/validation';
 
 export default {
-  name: "Register",
+  name: 'Register',
   components: {
     Dialog,
     Form,
-    TextInput
+    TextInput,
   },
   data() {
     return {
       email: {
-        value: "",
+        value: '',
         hasError: false,
-        errorMsg: "Enter a valid email address."
+        errorMsg: 'Enter a valid email address.',
       },
       password: {
-        value: "",
+        value: '',
         hasError: false,
-        errorMsg: "Please match the 2 password inputs.",
+        errorMsg: 'Please match the 2 password inputs.',
         confirmPassword: {
-          value: ""
-        }
+          value: '',
+        },
       },
       isSubmitted: null,
       isSuccess: null,
-      successMsg: "User has been created successfully.",
-      formHasError: null
+      successMsg: 'User has been created successfully.',
+      formHasError: null,
     };
   },
   computed: {
@@ -90,7 +90,7 @@ export default {
         Boolean(this.password.confirmPassword.value) &&
         this.password.value === this.password.confirmPassword.value
       );
-    }
+    },
   },
   methods: {
     async handleSubmit() {
@@ -123,7 +123,7 @@ export default {
           const { currentUser } = firebase.auth();
           await currentUser.sendEmailVerification();
           setTimeout(() => {
-            this.$router.push("/");
+            this.$router.push('/');
           }, 1000);
           this.isSuccess = true;
           this.formHasError = null;
@@ -133,10 +133,9 @@ export default {
           this.formHasError = error;
         }
       }
-    }
-  }
+    },
+  },
 };
 </script>
 
-<style>
-</style>
+<style></style>

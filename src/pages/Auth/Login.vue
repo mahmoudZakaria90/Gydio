@@ -28,7 +28,11 @@
           :errorMsg="password.errorMsg"
           v-model="password.value"
         />
-        <router-link to="reset" style="display: inline-block;margin-bottom: 20px">Forgot password?</router-link>
+        <router-link
+          to="reset"
+          style="display: inline-block;margin-bottom: 20px"
+          >Forgot password?</router-link
+        >
       </Form>
     </template>
     <div class="login-social">
@@ -36,58 +40,60 @@
         :handleClick="googleLogin"
         :icon="['fab', 'google']"
         :variant="'danger'"
-        :style="{width: '100%', 'margin-right': 0}"
-      >Login with Google</Button>
+        :style="{ width: '100%', 'margin-right': 0 }"
+        >Login with Google</Button
+      >
       <Button
         :handleClick="facebookLogin"
         :icon="['fab', 'facebook-f']"
-        :style="{width: '100%', 'margin-right': 0}"
-      >Login with Facebook</Button>
+        :style="{ width: '100%', 'margin-right': 0 }"
+        >Login with Facebook</Button
+      >
     </div>
   </Dialog>
 </template>
 
 <script>
-import firebase from "firebase/app";
+import firebase from 'firebase/app';
 
-import { eventBus } from "../../utils/bus";
-import { isEmail } from "../../utils/validation";
+import { eventBus } from '../../utils/bus';
+import { isEmail } from '../../utils/validation';
 
-import Button from "../../components/Button";
-import Dialog from "../../components/Dialog";
-import Form from "../../components/Form";
-import TextInput from "../../components/TextInput";
+import Button from '../../components/Button';
+import Dialog from '../../components/Dialog';
+import Form from '../../components/Form';
+import TextInput from '../../components/TextInput';
 
 export default {
-  name: "Login",
+  name: 'Login',
   components: {
     Button,
     Dialog,
     Form,
-    TextInput
+    TextInput,
   },
   data() {
     return {
       email: {
-        value: "",
+        value: '',
         hasError: false,
-        errorMsg: "Enter a valid email address."
+        errorMsg: 'Enter a valid email address.',
       },
       password: {
-        value: "",
+        value: '',
         hasError: false,
-        errorMsg: ""
+        errorMsg: '',
       },
       isSubmitted: null,
       isSuccess: null,
-      successMsg: "User has been logged in successfully.",
-      formHasError: null
+      successMsg: 'User has been logged in successfully.',
+      formHasError: null,
     };
   },
   computed: {
     isEmail() {
       return isEmail(this.email.value);
-    }
+    },
   },
   methods: {
     async handleSubmit() {
@@ -108,13 +114,13 @@ export default {
           this.isSuccess = true;
           this.formHasError = null;
           setTimeout(() => {
-            this.$router.push("/");
+            this.$router.push('/');
           }, 1000);
         } catch (error) {
           this.formHasError = error;
           this.isSuccess = false;
           this.isSubmitted = false;
-          eventBus.$emit("resetInput", "");
+          eventBus.$emit('resetInput', '');
         }
       }
     },
@@ -123,7 +129,7 @@ export default {
       try {
         await firebase.auth().signInWithPopup(provider);
         setTimeout(() => {
-          this.$router.push("/");
+          this.$router.push('/');
         }, 1000);
       } catch (error) {
         this.formHasError = error;
@@ -134,13 +140,13 @@ export default {
       try {
         await firebase.auth().signInWithPopup(provider);
         setTimeout(() => {
-          this.$router.push("/");
+          this.$router.push('/');
         }, 1000);
       } catch (error) {
         this.formHasError = error;
       }
-    }
-  }
+    },
+  },
 };
 </script>
 
